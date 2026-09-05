@@ -1,0 +1,534 @@
+<title>Brier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  /* dark-first: the bare block is the committed palette */
+  --ground:#0c1016;
+  --panel:#141a23;
+  --panel-2:#1a222c;
+  --line:#26303c;
+  --line-soft:#1e2731;
+  --ink:#e6ebf2;
+  --ink-2:#aab6c6;
+  --dim:#7f8da0;
+  --faint:#5c6878;
+  --accent:#7ad7f0;        /* instrument cyan */
+  --accent-deep:#2e7f99;
+  --settled:#5ec9a7;       /* verdigris - market settled */
+  --abstain:#e8a33d;       /* panel amber - held, escalated */
+  --refused:#e0736b;       /* dusty red - rejected at admission */
+  --shadow:0 1px 0 rgba(255,255,255,.03), 0 12px 32px rgba(0,0,0,.4);
+
+  --display:"Newsreader","Iowan Old Style",Georgia,serif;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --measure:66ch;
+  --pad:clamp(20px,5vw,40px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --ground:#f7f8fa;
+    --panel:#ffffff;
+    --panel-2:#f0f3f7;
+    --line:#d7dee7;
+    --line-soft:#e4e9ef;
+    --ink:#131a23;
+    --ink-2:#3f4c5c;
+    --dim:#5f6d7e;
+    --faint:#8493a4;
+    --accent:#1c7f9e;
+    --accent-deep:#7ad7f0;
+    --settled:#1d8a6a;
+    --abstain:#a86a10;
+    --refused:#b4443a;
+    --shadow:0 1px 2px rgba(16,24,32,.05), 0 10px 28px rgba(16,24,32,.07);
+  }
+}
+:root[data-theme="light"]{
+  --ground:#f7f8fa; --panel:#ffffff; --panel-2:#f0f3f7;
+  --line:#d7dee7; --line-soft:#e4e9ef;
+  --ink:#131a23; --ink-2:#3f4c5c; --dim:#5f6d7e; --faint:#8493a4;
+  --accent:#1c7f9e; --accent-deep:#7ad7f0;
+  --settled:#1d8a6a; --abstain:#a86a10; --refused:#b4443a;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 10px 28px rgba(16,24,32,.07);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font:16px/1.62 var(--sans);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.shell{max-width:1000px;margin:0 auto;padding:0 var(--pad)}
+
+/* ---------- masthead ---------- */
+.masthead{
+  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  padding:22px 0;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;
+}
+.wordmark{font:600 21px/1 var(--display);letter-spacing:-.01em}
+.wordmark span{color:var(--accent)}
+.station{font:500 11px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(44px,7vw,76px) 0 clamp(36px,5vw,52px)}
+.kicker{
+  font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:22px;
+}
+h1{
+  font:400 clamp(34px,5.6vw,56px)/1.1 var(--display);
+  letter-spacing:-.02em;margin:0 0 22px;text-wrap:balance;max-width:19ch;
+}
+h1 em{font-style:italic;color:var(--accent)}
+.lede{font-size:clamp(17px,2vw,19px);color:var(--ink-2);max-width:58ch;margin:0}
+.lede strong{color:var(--ink);font-weight:500}
+
+/* ---------- generic sections ---------- */
+section{padding:clamp(40px,6vw,64px) 0;border-top:1px solid var(--line-soft)}
+.sec-label{
+  font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 18px;
+}
+h2{font:500 clamp(24px,3.4vw,32px)/1.22 var(--display);letter-spacing:-.015em;
+   margin:0 0 18px;text-wrap:balance;max-width:24ch}
+h3{font:600 15px/1.4 var(--sans);margin:0 0 8px;letter-spacing:-.005em}
+p{margin:0 0 16px;max-width:var(--measure)}
+p:last-child{margin-bottom:0}
+.dimtext{color:var(--dim)}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+/* ---------- instrument panel (the readout look) ---------- */
+.panel{
+  background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:11px 16px;border-bottom:1px solid var(--line);background:var(--panel-2);
+  font:500 11px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+  flex-wrap:wrap;
+}
+.panel-body{padding:18px 16px}
+.scroll-x{overflow-x:auto}
+
+/* code / spec readout */
+pre{margin:0;font:400 13px/1.75 var(--mono);color:var(--ink-2);tab-size:2}
+pre .k{color:var(--accent)}
+pre .s{color:var(--settled)}
+pre .c{color:var(--faint);font-style:italic}
+pre .w{color:var(--abstain)}
+code{font:500 .89em var(--mono);color:var(--accent);
+     background:var(--panel-2);border:1px solid var(--line-soft);
+     padding:1px 5px;border-radius:4px;white-space:nowrap}
+
+/* ---------- the gap: signature comparison ---------- */
+.sig{display:grid;gap:14px;grid-template-columns:1fr;margin-top:24px}
+@media(min-width:760px){.sig{grid-template-columns:1fr 1fr}}
+.field-list{list-style:none;margin:0;padding:0;font:400 13px/1.9 var(--mono)}
+.field-list li{display:flex;gap:10px;align-items:baseline}
+.field-list .fname{color:var(--ink-2)}
+.field-list .ftype{color:var(--faint);font-size:11.5px}
+.field-list .missing .fname{color:var(--refused);text-decoration:line-through;
+  text-decoration-color:color-mix(in srgb,var(--refused) 50%,transparent)}
+.field-list .missing .ftype{color:var(--refused);opacity:.8;text-decoration:none}
+
+/* ---------- three mechanics ---------- */
+.mechs{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+       border-radius:10px;overflow:hidden;margin-top:8px}
+@media(min-width:820px){.mechs{grid-template-columns:repeat(3,1fr)}}
+.mech{background:var(--panel);padding:22px 20px;display:flex;flex-direction:column;gap:10px}
+.mech .stage{font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.mech p{font-size:14.5px;color:var(--dim);margin:0;max-width:none}
+.mech .verdict{
+  margin-top:auto;padding-top:12px;font:500 11px/1.5 var(--mono);
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.mech.a .verdict{color:var(--refused)}
+.mech.b .verdict{color:var(--accent)}
+.mech.c .verdict{color:var(--abstain)}
+
+/* ---------- settlement readout (interactive) ---------- */
+.readout{margin-top:8px}
+.resolvers{display:flex;flex-direction:column;gap:1px;background:var(--line-soft)}
+.rsv{
+  display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;
+  background:var(--panel);padding:13px 16px;font:400 13px/1.4 var(--mono);
+}
+.rsv .id{color:var(--faint);letter-spacing:.08em}
+.rsv .val{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rsv .vd{font-weight:600;letter-spacing:.06em;min-width:4ch;text-align:right}
+.rsv .vd[data-v="YES"]{color:var(--settled)}
+.rsv .vd[data-v="NO"]{color:var(--abstain)}
+.flip{
+  font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);background:var(--panel-2);border:1px solid var(--line);
+  padding:6px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;
+}
+.flip:hover{color:var(--accent);border-color:var(--accent-deep)}
+.outcome{
+  padding:18px 16px;border-top:1px solid var(--line);
+  display:flex;gap:14px;align-items:flex-start;
+}
+.lamp{width:9px;height:9px;border-radius:50%;flex:none;margin-top:7px;
+      box-shadow:0 0 0 4px color-mix(in srgb,currentColor 16%,transparent)}
+.outcome .state{font:600 13px/1.5 var(--mono);letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
+.outcome .detail{font-size:14px;color:var(--dim);max-width:56ch;margin:0}
+.outcome[data-state="settled"]{color:var(--settled)}
+.outcome[data-state="abstained"]{color:var(--abstain)}
+.outcome .detail code{white-space:normal}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- ships / list ---------- */
+.ships{list-style:none;margin:0;padding:0;display:grid;gap:1px;
+       background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ships li{background:var(--panel);padding:15px 18px;display:grid;
+          grid-template-columns:auto 1fr;gap:16px;align-items:baseline;font-size:14.5px;color:var(--dim)}
+.ships .wk{font:500 10.5px/1.6 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+           color:var(--faint);white-space:nowrap}
+.ships b{color:var(--ink);font-weight:500}
+
+/* ---------- facts ---------- */
+.facts{width:100%;border-collapse:collapse;font-size:14px}
+.facts th,.facts td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line-soft)}
+.facts tr:last-child td{border-bottom:0}
+.facts th{font:500 10.5px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.facts td.num{font:500 14px/1.4 var(--mono);text-align:right;white-space:nowrap;
+              font-variant-numeric:tabular-nums;color:var(--ink)}
+.facts td.note{color:var(--dim)}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line-soft);padding:32px 0 56px;
+       display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+       font:400 12.5px/1.7 var(--mono);color:var(--faint)}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line)}
+footer a:hover{color:var(--accent)}
+</style>
+
+<div class="shell">
+
+  <div class="masthead">
+    <div class="wordmark">Brier<span>.</span></div>
+    <div class="station">Resolution layer &middot; Rain protocol &middot; Arbitrum One</div>
+  </div>
+
+  <div class="hero">
+    <div class="kicker">Prediction markets that know when to stop</div>
+    <h1>Every market ships with a <em>resolution contract</em>, or it doesn't ship.</h1>
+    <p class="lede">Rain lets an agent turn a prompt into a live market. Brier is the layer that
+    decides whether that market can be settled at all &mdash; and <strong>refuses to settle it when
+    the evidence disagrees.</strong></p>
+  </div>
+
+  <section>
+    <p class="sec-label">01 &mdash; The observation</p>
+    <h2>Market creation got automated. Market resolution didn't.</h2>
+    <p>This is the call that creates a market on Rain. It is the whole interface between
+    &ldquo;an agent had an idea&rdquo; and &ldquo;real money is now at risk.&rdquo;</p>
+
+    <div class="sig">
+      <div class="panel">
+        <div class="panel-head"><span>buildCreateMarketTx &mdash; accepts</span><span>rain-sdk</span></div>
+        <div class="panel-body">
+          <ul class="field-list">
+            <li><span class="fname">marketQuestion</span><span class="ftype">free text</span></li>
+            <li><span class="fname">marketDescription</span><span class="ftype">free text</span></li>
+            <li><span class="fname">isPublicPoolResolverAi</span><span class="ftype">boolean</span></li>
+            <li><span class="fname">startTime / endTime</span><span class="ftype">uint</span></li>
+            <li><span class="fname">barValues</span><span class="ftype">uint[]</span></li>
+            <li><span class="fname">baseToken</span><span class="ftype">address</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>Not accepted &mdash; anywhere</span><span>the gap</span></div>
+        <div class="panel-body">
+          <ul class="field-list">
+            <li class="missing"><span class="fname">resolutionSource</span><span class="ftype">which instrument settles it</span></li>
+            <li class="missing"><span class="fname">selector</span><span class="ftype">which field is read</span></li>
+            <li class="missing"><span class="fname">observedAt</span><span class="ftype">at what instant</span></li>
+            <li class="missing"><span class="fname">comparator</span><span class="ftype">against what threshold</span></li>
+            <li class="missing"><span class="fname">tiebreak</span><span class="ftype">when two readings tie</span></li>
+            <li class="missing"><span class="fname">voidIf</span><span class="ftype">when the question was bad</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:26px">The entire settlement specification is prose plus one boolean. That is
+    survivable when a careful human writes the rules text and a bonded human panel reads it. It is not
+    survivable at machine speed.</p>
+    <p class="dimtext">And even the careful version breaks. A governance attack moved Polymarket's
+    Ukraine mineral-deal market from 9% to 100% and settled &ldquo;Yes&rdquo; with no agreement in
+    place, on five million UMA cast across three accounts. The <i>Wall Street Journal</i> found that in
+    most disputed markets, more than half the votes came from ten wallets. Traders sued over a
+    resolution in July 2026. Ambiguous events settle 50-50, so a trader who was demonstrably right
+    gets back half their stake.</p>
+  </section>
+
+  <section>
+    <p class="sec-label">02 &mdash; The instrument</p>
+    <h2>A resolution contract is an observation specification.</h2>
+    <p>Glenn Brier was a meteorologist. In 1950 he published the scoring rule that made weather
+    forecasts falsifiable, and it works because a weather observation names its instrument, its
+    units, and its moment before anyone forecasts anything. A market question deserves the same
+    discipline.</p>
+    <p>Every market created through Brier carries this, signed. The hash goes on-chain in
+    <code>marketDescription</code> &mdash; a field Rain already has &mdash; so the rules cannot be
+    reinterpreted after the outcome is known. <strong>No protocol change required.</strong></p>
+
+    <div class="panel scroll-x" style="margin-top:22px">
+      <div class="panel-head"><span>ResolutionSpec &middot; sha256 50b608d4&hellip;85df</span><span>signed at creation</span></div>
+      <div class="panel-body"><pre>{
+  <span class="k">"question"</span>:    <span class="s">"Top ARC-AGI-3 semi-private score above 15% on 2026-12-31?"</span>,
+  <span class="k">"source"</span>:      <span class="s">"https://arcprize.org/leaderboard"</span>,
+  <span class="k">"selector"</span>:    <span class="s">"$.arc_agi_3.semi_private[0].score"</span>,
+  <span class="k">"observed_at"</span>: <span class="s">"2026-12-31T23:59:59Z"</span>,        <span class="c">// UTC, not "end of year"</span>
+  <span class="k">"unit"</span>:        <span class="s">"percent"</span>,
+  <span class="k">"comparator"</span>:  <span class="s">"&gt; 15.0"</span>,
+  <span class="k">"tiebreak"</span>:    <span class="s">"earliest submission timestamp wins"</span>,
+  <span class="k">"void_if"</span>: [
+    <span class="w">"source unreachable for 24h after observed_at"</span>,
+    <span class="w">"field absent or non-numeric"</span>,
+    <span class="w">"scoring methodology revised after market open"</span>
+  ],
+  <span class="k">"fallback"</span>:    <span class="w">"abstain"</span>              <span class="c">// never guess</span>
+}</pre></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">03 &mdash; The method</p>
+    <h2>Three gates, and only one of them settles anything.</h2>
+
+    <div class="mechs">
+      <div class="mech a">
+        <div class="stage">Before open</div>
+        <h3>Admission grading</h3>
+        <p>The spec is dry-run against the live source, then attacked: enumerate the plausible readings
+        of the question and check whether the spec picks out exactly one. If two readings survive, the
+        question is underspecified.</p>
+        <div class="verdict">&rarr; Refused, with the defect named</div>
+      </div>
+      <div class="mech b">
+        <div class="stage">At open</div>
+        <h3>Contract binding</h3>
+        <p>The spec is hashed and written on-chain with the market. Traders price a question whose
+        settlement rule is fixed and public before they take a position &mdash; not one that gets
+        interpreted afterwards.</p>
+        <div class="verdict">&rarr; Market opens, rules frozen</div>
+      </div>
+      <div class="mech c">
+        <div class="stage">At oracleEndTime</div>
+        <h3>Abstaining settlement</h3>
+        <p>N independent resolvers execute the same spec &mdash; different models, independent fetches.
+        Unanimous settles. Anything less does not settle at all: it abstains and escalates with the
+        evidence attached.</p>
+        <div class="verdict">&rarr; Settle, or hold and escalate</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">04 &mdash; The readout</p>
+    <h2>A wrong settlement costs more than a slow one.</h2>
+    <p>This is the settlement gate. The rule below is the one in <code>src/settle.mjs</code>, and the
+    hashes are real sha256 of the bytes shown. The three verdicts are an <b>example panel</b>, not a
+    live fetch. Flip any resolver and watch what Brier does with a split.</p>
+
+    <div class="panel readout">
+      <div class="panel-head"><span>Settlement gate &middot; example panel</span><span id="clock">observed_at 2026-12-31T23:59:59Z</span></div>
+      <div class="resolvers" id="resolvers">
+        <div class="rsv">
+          <span class="id">RSV-A</span>
+          <span class="val">read 15.7 &middot; sha256 3303dbbd&hellip;</span>
+          <span class="vd" data-v="YES">YES</span>
+          <button class="flip" data-i="0" type="button">flip</button>
+        </div>
+        <div class="rsv">
+          <span class="id">RSV-B</span>
+          <span class="val">read 15.7 &middot; sha256 3303dbbd&hellip;</span>
+          <span class="vd" data-v="YES">YES</span>
+          <button class="flip" data-i="1" type="button">flip</button>
+        </div>
+        <div class="rsv">
+          <span class="id">RSV-C</span>
+          <span class="val">read 15.7 &middot; sha256 3303dbbd&hellip;</span>
+          <span class="vd" data-v="YES">YES</span>
+          <button class="flip" data-i="2" type="button">flip</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome" data-state="settled" aria-live="polite">
+        <span class="lamp"></span>
+        <div>
+          <div class="state" id="ostate">Settled &mdash; unanimous</div>
+          <p class="detail" id="odetail">All three resolvers read the same value from the named source.
+          <code>buildResolveMarketTx</code> is called and a receipt is published: spec hash, source
+          bytes hash, fetch timestamps, every verdict.</p>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:24px" class="dimtext">The receipt is the point. Whoever lost the trade can
+    recompute the settlement from published bytes without trusting us, the model, or Rain. That is
+    the part a website cannot do and an escrow can.</p>
+  </section>
+
+  <section>
+    <p class="sec-label">05 &mdash; The measurement</p>
+    <h2>It refuses the market that got attacked.</h2>
+    <p>The grader runs on an adversarial corpus of twenty questions &mdash; historical disputed
+    markets, clean counterparts, and the shape an agent produces from a one-line prompt.
+    <code>npm test</code> covers it with 35 assertions.</p>
+
+    <div class="panel scroll-x" style="margin-top:20px">
+      <div class="panel-head"><span>node bin/grade.mjs</span><span>20 cases</span></div>
+      <div class="panel-body"><pre>unsettleable, refused       <span class="s">12/12</span>   (100% caught)
+settleable, admitted        <span class="s">8/8</span>     (100% passed)
+false refusals              <span class="s">0</span>
+
+Historical disputed market:
+  <span class="w">refused</span>  &ldquo;Will Ukraine agree to Trump's mineral deal before April?&rdquo;
+           fired: TEMPORAL_VAGUE, VAGUE_PREDICATE
+           <span class="c">// "agree" is a judgement call no source can settle;</span>
+           <span class="c">// "before April" names a period, not an instant.</span></pre></div>
+    </div>
+
+    <p style="margin-top:22px">That market is not hypothetical. Its odds were driven from 9% to 100%
+    and it settled &ldquo;Yes&rdquo; with no agreement in place, on five million UMA cast across three
+    accounts. Brier never opens it. The defect is in the question, and the question was checkable
+    before a single dollar was staked.</p>
+
+    <div class="panel" style="margin-top:20px;border-color:var(--abstain)">
+      <div class="panel-head" style="color:var(--abstain)"><span>What this number is not</span><span>read before quoting it</span></div>
+      <div class="panel-body">
+        <p style="margin:0;color:var(--dim);font-size:14.5px">100% is circular and should be read as
+        such: the same author wrote the corpus labels and the detection probes. It demonstrates that
+        the mechanism runs and that the historical failure is inside its reach. It is
+        <b>not</b> evidence of accuracy on questions nobody has seen. The probes are lexical, not
+        semantic &mdash; they catch the constructs that have empirically produced disputes, and they
+        will miss a question that is ambiguous for a reason no probe knows about. The honest version
+        of this claim needs a corpus somebody else labels, and that is the next measurement, not a
+        finished one.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="sec-label">06 &mdash; Why this, on Rain, now</p>
+    <h2>Liquidity is not the constraint. Trustworthy market supply is.</h2>
+
+    <div class="panel scroll-x">
+      <table class="facts">
+        <thead>
+          <tr><th>Rain, measured</th><th style="text-align:right">Value</th><th>Reading</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Total value locked</td><td class="num">$100.1M</td>
+              <td class="note">After Rain committed $100M of its own. Capital is solved.</td></tr>
+          <tr><td>Cumulative volume</td><td class="num">$142.4M</td>
+              <td class="note">Against that liquidity, thin. Volume is the scarce good.</td></tr>
+          <tr><td>Traders</td><td class="num">36.6K</td>
+              <td class="note">Fewer people than a mid-size forum.</td></tr>
+          <tr><td>Marquee World Cup market</td><td class="num">$1.3M</td>
+              <td class="note">The next ten did $40K&ndash;$300K each.</td></tr>
+          <tr><td>Builder revenue share</td><td class="num">0.5%</td>
+              <td class="note">Flat, on generated volume, paid from the token allocation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:26px">Brier is a platform, not an oracle sitting outside the flow. Markets are
+    created and traded through it on Rain rails, so it generates volume and earns that 0.5%.</p>
+    <p>It also protects it. A flat rebate on volume invites wash trading &mdash; agents cycling size
+    against each other to farm the rebate. Receipts make honest volume legible and self-dealing
+    obvious. <strong>Brier defends the grant budget instead of mining it.</strong></p>
+  </section>
+
+  <section>
+    <p class="sec-label">07 &mdash; What ships</p>
+    <h2>Two of these are already done.</h2>
+    <ul class="ships">
+      <li><span class="wk">Done</span><span><b>Spec schema and signer.</b> Canonical serialisation,
+        sha256, and the binding into <code>marketDescription</code>. Order-independent, so two specs
+        that mean the same thing hash the same. <code>src/spec.mjs</code></span></li>
+      <li><span class="wk">Done</span><span><b>Admission grader and settlement gate.</b> Six ambiguity
+        probes, the unanimity rule, and the escalation packet. A resolver that could not read is
+        counted as a hold, never a vote. <code>src/grader.mjs</code>, <code>src/settle.mjs</code></span></li>
+      <li><span class="wk">Next</span><span><b>An independently labelled corpus.</b> Someone other than
+        the author labels 100 questions, so the number above stops being circular.</span></li>
+      <li><span class="wk">Next</span><span><b>Live resolvers.</b> Real fetches against real sources,
+        replacing the example panel above.</span></li>
+      <li><span class="wk">Then</span><span><b>Market surface.</b> Creation and trading on the Rain SDK
+        with account abstraction, and a public receipt page per market.</span></li>
+    </ul>
+    <p style="margin-top:26px" class="dimtext">Launch vertical is AI outcomes &mdash; model releases,
+    benchmark scores, competition results &mdash; because those sources are machine-readable, which
+    makes the spec discipline provable on day one instead of aspirational.</p>
+  </section>
+
+  <footer>
+    <div>Brier &middot; a resolution layer for agent-created markets<br>
+    Built on <a href="https://www.rain.one/">Rain</a> &middot; Arbitrum One &middot; 2026</div>
+    <div>Applying to Rain Builder Grants<br>
+    <a href="https://github.com/rain1-labs/rain-sdk">rain-sdk</a> &middot; grader and settlement gate implemented, 35 tests passing &middot; no markets live yet</div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  // Byte hashes are real sha256 of the values shown, so a reader can recompute them.
+  var HASH = {
+    "15.7": "3303dbbd", "15.0": "c72ae967", "14.9": "142010b8"
+  };
+  var verdicts = ["YES","YES","YES"];
+  var values   = ["15.7","15.7","15.7"];
+  var alt      = ["15.0","14.9","14.9"];
+  var rows = document.querySelectorAll("#resolvers .rsv");
+  var outcome = document.getElementById("outcome");
+  var ostate  = document.getElementById("ostate");
+  var odetail = document.getElementById("odetail");
+
+  function render(){
+    for (var i=0;i<rows.length;i++){
+      var vd = rows[i].querySelector(".vd");
+      var val = rows[i].querySelector(".val");
+      vd.setAttribute("data-v", verdicts[i]);
+      vd.textContent = verdicts[i];
+      var shown = verdicts[i] === "YES" ? values[i] : alt[i];
+      val.textContent = "read " + shown + " · sha256 " + HASH[shown] + "…";
+    }
+    var yes = verdicts.filter(function(v){return v==="YES"}).length;
+    if (yes === 3 || yes === 0){
+      outcome.setAttribute("data-state","settled");
+      ostate.textContent = "Settled — unanimous";
+      odetail.innerHTML = "All three resolvers read the same value from the named source. " +
+        "<code>buildResolveMarketTx</code> is called and a receipt is published: spec hash, " +
+        "source bytes hash, fetch timestamps, every verdict.";
+      ostate.textContent = yes === 3 ? "Settled — unanimous YES" : "Settled — unanimous NO";
+    } else {
+      outcome.setAttribute("data-state","abstained");
+      ostate.textContent = "Abstained — panel split " + yes + "/3";
+      odetail.innerHTML = "The resolvers disagree, so the question was not as well-posed as it looked. " +
+        "Brier does not settle. It sets <code>isDisputed</code>, publishes every resolver's fetched " +
+        "bytes and verdict, and hands the human oracle a prepared evidence packet. " +
+        "Traders keep their positions until a human decides.";
+    }
+  }
+
+  document.getElementById("resolvers").addEventListener("click", function(e){
+    var b = e.target.closest(".flip");
+    if (!b) return;
+    var i = +b.getAttribute("data-i");
+    verdicts[i] = verdicts[i] === "YES" ? "NO" : "YES";
+    render();
+  });
+
+  render();
+})();
+</script>

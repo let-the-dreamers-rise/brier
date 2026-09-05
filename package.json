@@ -1,0 +1,12 @@
+{
+  "name": "brier",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Resolution contracts for agent-created prediction markets on Rain.",
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "grade": "node bin/grade.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

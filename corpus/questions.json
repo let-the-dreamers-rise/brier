@@ -1,0 +1,275 @@
+{
+  "note": "Adversarial corpus for admission grading. `expect` is the decision a competent human market operator should reach, assigned from the question text alone. Entries marked `historical` are drawn from markets that actually disputed or were attacked on Polymarket; the rest are synthetic questions of the shape agents produce from a prompt.",
+  "cases": [
+    {
+      "id": "uma-ukraine-minerals",
+      "historical": true,
+      "note": "Attacked Mar 2025: odds moved 9% to 100% and settled Yes with no agreement in place, on 5M UMA cast across three accounts (25% of the vote).",
+      "question": "Will Ukraine agree to Trump's mineral deal before April?",
+      "spec": { "fallback": "abstain" },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "uma-ukraine-minerals-repaired",
+      "note": "The same market, rewritten so it can be settled. This is what the grader should push a creator toward.",
+      "question": "Will the text of a US-Ukraine minerals agreement be published on state.gov on or before 2026-04-01T00:00:00Z?",
+      "spec": {
+        "question": "US-Ukraine minerals agreement text published",
+        "source": "https://www.state.gov/documents/",
+        "selector": "$.documents[?(@.title =~ /minerals agreement/i)].published_at",
+        "observed_at": "2026-04-01T00:00:00Z",
+        "void_if": ["state.gov unreachable for 24h after observed_at"],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    },
+    {
+      "id": "arc-leaderboard-clean",
+      "question": "Will the ARC-AGI-3 semi-private score at the top of the leaderboard exceed 15 percent as recorded on 2026-12-31T23:59:59Z?",
+      "spec": {
+        "question": "Top ARC-AGI-3 semi-private score above 15%",
+        "source": "https://arcprize.org/leaderboard",
+        "selector": "$.arc_agi_3.semi_private[0].score",
+        "observed_at": "2026-12-31T23:59:59Z",
+        "unit": "percent",
+        "comparator": "> 15.0",
+        "tiebreak": "earliest submission timestamp wins",
+        "void_if": [
+          "source unreachable for 24h after observed_at",
+          "field absent or non-numeric",
+          "scoring methodology revised after market open"
+        ],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    },
+    {
+      "id": "agent-prompt-btc",
+      "note": "The shape an agent produces from a one-line prompt.",
+      "question": "Will BTC hit 100k by end of year?",
+      "spec": { "fallback": "abstain" },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "agent-prompt-btc-repaired",
+      "question": "Will the BTC-USD price printed by Chainlink exceed 100000 at 2026-12-31T23:59:59Z?",
+      "spec": {
+        "question": "BTC-USD above 100000",
+        "source": "chainlink:arbitrum/BTC-USD",
+        "selector": "$.answer",
+        "observed_at": "2026-12-31T23:59:59Z",
+        "unit": "USD",
+        "comparator": "> 100000",
+        "tiebreak": "the round closest to observed_at without exceeding it",
+        "void_if": ["feed reports stale for more than 3600s at observed_at"],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    },
+    {
+      "id": "vague-major-lab",
+      "question": "Will a major AI lab release a significant new model this quarter?",
+      "spec": { "fallback": "abstain" },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "superlative-untied",
+      "question": "Which model will have the highest MMLU score on 2026-12-31T23:59:59Z?",
+      "spec": {
+        "question": "Highest MMLU",
+        "source": "https://paperswithcode.com/sota/mmlu",
+        "selector": "$.results[0].model",
+        "observed_at": "2026-12-31T23:59:59Z",
+        "void_if": ["leaderboard unreachable"],
+        "fallback": "abstain"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "superlative-tied",
+      "question": "Which model will have the highest MMLU score on 2026-12-31T23:59:59Z?",
+      "spec": {
+        "question": "Highest MMLU",
+        "source": "https://paperswithcode.com/sota/mmlu",
+        "selector": "$.results[0].model",
+        "observed_at": "2026-12-31T23:59:59Z",
+        "tiebreak": "if scores tie to 2dp, the earlier published paper wins",
+        "void_if": ["leaderboard unreachable"],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    },
+    {
+      "id": "threshold-no-unit",
+      "question": "Will Arbitrum daily transactions exceed 5 million on 2026-10-01T00:00:00Z?",
+      "spec": {
+        "question": "Arbitrum daily txs above 5M",
+        "source": "https://api.arbiscan.io/api?module=stats",
+        "selector": "$.result.dailyTx",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "void_if": ["api unreachable"],
+        "fallback": "abstain"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "no-void-branch",
+      "question": "Will the ETH-USD Chainlink feed read above 4000 at 2026-11-01T00:00:00Z?",
+      "spec": {
+        "question": "ETH above 4000",
+        "source": "chainlink:arbitrum/ETH-USD",
+        "selector": "$.answer",
+        "observed_at": "2026-11-01T00:00:00Z",
+        "unit": "USD",
+        "comparator": "> 4000",
+        "fallback": "abstain"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "fallback-guess",
+      "note": "A spec that permits guessing is refused even when everything else is pinned.",
+      "question": "Will the ETH-USD Chainlink feed read above 4000 at 2026-11-01T00:00:00Z?",
+      "spec": {
+        "question": "ETH above 4000",
+        "source": "chainlink:arbitrum/ETH-USD",
+        "selector": "$.answer",
+        "observed_at": "2026-11-01T00:00:00Z",
+        "unit": "USD",
+        "comparator": "> 4000",
+        "void_if": ["feed stale"],
+        "fallback": "majority"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "relative-time-only",
+      "question": "Will OpenAI announce a new reasoning model soon?",
+      "spec": { "fallback": "abstain" },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "http-not-https",
+      "question": "Will the CPI index print above 320 at 2026-10-15T12:30:00Z?",
+      "spec": {
+        "question": "CPI above 320",
+        "source": "http://bls.gov/cpi",
+        "selector": "$.cpi_u.value",
+        "observed_at": "2026-10-15T12:30:00Z",
+        "unit": "index",
+        "comparator": "> 320",
+        "void_if": ["release delayed past observed_at"],
+        "fallback": "abstain"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "local-time-not-utc",
+      "question": "Will the S&P 500 close above 6000 on 2026-10-15?",
+      "spec": {
+        "question": "SPX close above 6000",
+        "source": "https://api.marketdata.app/v1/stocks/candles/D/SPX",
+        "selector": "$.c[-1]",
+        "observed_at": "2026-10-15",
+        "unit": "USD",
+        "comparator": "> 6000",
+        "void_if": ["market holiday"],
+        "fallback": "abstain"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "clean-binary-onchain",
+      "question": "Will the Rain protocol factory at 0xA8640B62 have created more than 5000 markets as of 2026-12-01T00:00:00Z?",
+      "spec": {
+        "question": "Rain factory market count above 5000",
+        "source": "arbitrum:0xA8640B62D755e42C9ed6A86d0fc65CE09e31F264",
+        "selector": "$.marketCount",
+        "observed_at": "2026-12-01T00:00:00Z",
+        "unit": "markets",
+        "comparator": "> 5000",
+        "void_if": ["contract self-destructed or migrated before observed_at"],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    },
+    {
+      "id": "compound-ambiguous",
+      "question": "Will Fed cut rates and inflation fall below 2 percent or unemployment rise above 5 percent by 2026-12-31T00:00:00Z?",
+      "spec": {
+        "question": "Macro compound",
+        "source": "https://api.stlouisfed.org/fred/series",
+        "selector": "$.observations",
+        "observed_at": "2026-12-31T00:00:00Z",
+        "unit": "percent",
+        "void_if": ["FRED unreachable"],
+        "fallback": "abstain"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "election-clean",
+      "question": "Will the AP call the New Jersey governor race for the Democratic candidate as recorded at 2026-11-10T00:00:00Z?",
+      "spec": {
+        "question": "AP call, NJ governor",
+        "source": "https://api.ap.org/v3/elections/2026-11-03",
+        "selector": "$.races[?(@.office=='Governor' && @.state=='NJ')].winner_party",
+        "observed_at": "2026-11-10T00:00:00Z",
+        "entities": ["Democratic", "Republican", "Other"],
+        "tiebreak": "if AP has made no call, the void_if branch applies",
+        "void_if": ["AP has published no call at observed_at", "race is subject to a certified recount"],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    },
+    {
+      "id": "unbound-entity-enumerated",
+      "question": "Will a top lab publish a model card scoring above 90 on GPQA at 2026-12-31T23:59:59Z?",
+      "spec": {
+        "question": "Top-lab GPQA above 90",
+        "source": "https://paperswithcode.com/sota/gpqa",
+        "selector": "$.results[*]",
+        "observed_at": "2026-12-31T23:59:59Z",
+        "unit": "percent",
+        "comparator": "> 90",
+        "entities": ["OpenAI", "Anthropic", "Google DeepMind", "Meta", "Mistral", "Alibaba"],
+        "tiebreak": "highest score; ties broken by earliest publication date",
+        "void_if": ["leaderboard unreachable for 24h after observed_at"],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    },
+    {
+      "id": "no-source",
+      "question": "Will Rain protocol TVL exceed 200 million USD at 2026-12-31T23:59:59Z?",
+      "spec": {
+        "question": "Rain TVL above 200M",
+        "observed_at": "2026-12-31T23:59:59Z",
+        "unit": "USD",
+        "comparator": "> 200000000",
+        "void_if": ["defillama unreachable"],
+        "fallback": "abstain"
+      },
+      "expect": "REFUSE"
+    },
+    {
+      "id": "tvl-clean",
+      "question": "Will Rain protocol TVL exceed 200 million USD at 2026-12-31T23:59:59Z?",
+      "spec": {
+        "question": "Rain TVL above 200M",
+        "source": "https://api.llama.fi/protocol/rain",
+        "selector": "$.currentChainTvls.Arbitrum",
+        "observed_at": "2026-12-31T23:59:59Z",
+        "unit": "USD",
+        "comparator": "> 200000000",
+        "tiebreak": "the last datapoint at or before observed_at",
+        "void_if": [
+          "DefiLlama unreachable for 24h after observed_at",
+          "DefiLlama restates its Rain methodology after market open"
+        ],
+        "fallback": "abstain"
+      },
+      "expect": "ADMIT"
+    }
+  ]
+}
