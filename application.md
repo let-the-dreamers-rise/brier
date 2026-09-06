@@ -21,11 +21,47 @@ Brier
 > Long version below; a 900-character version follows if the field is capped.
 
 ```
-Brier is a prediction market platform on Rain where no market opens without a
-machine-checkable resolution contract, and no market settles unless independent
-resolvers agree on the answer.
+Brier is the admission layer for agent-created prediction markets. A market that
+cannot be settled never opens.
 
-THE GAP
+THE CEILING
+
+Every oracle in this market works at the exit, on a question that already has
+money on it, and there is a measured limit to how far that can go. The most
+recent evaluation of multi-agent AI oracles (arXiv 2605.30802, 1,189 KalshiBench
+questions) reports:
+
+  best architecture             83.4%   (deliberation made it worse, 76.1%)
+  Companies / Crypto / Econ     58-67%  "resist improvement regardless of
+                                         architecture"
+  hard core                     13.8%   164 of 1,189 resist correction by ANY
+                                         multi-agent approach
+  ensemble error correlation    r=.53-.69  "a fundamental limit on
+                                            ensemble-based approaches"
+  unanimous + high confidence   97.9%   but on only 47% of the set
+
+There is a floor of questions no resolver will ever get right, and it is a
+property of the question, not the resolver. The only place to raise that floor is
+before the market opens.
+
+THE DOOR IS UNOCCUPIED
+
+The same paper states what nobody is doing, in its own words: "No admission-time
+screening is proposed or implemented ... questions fundamentally unsuitable for
+automated resolution are identified through error analysis post-hoc rather than
+filtered pre-resolution."
+
+At the exit, the field is crowded and funded -- Cournot (YZi Labs, live as the
+resolution layer for 42), UMA, Kleros + Reality.eth, Tellor. At the door there is
+nobody. Kalshi comes closest, by having lawyers draft contract terms per market
+and file them with the CFTC, each naming a Source Agency. That is correct and it
+cannot scale to markets an agent writes from a prompt.
+
+This makes Cournot a customer rather than a competitor. A better resolver still
+inherits whatever question it is handed. Brier improves the input to all of them,
+the way a type checker does not compete with the runtime.
+
+THE GAP ON RAIN
 
 Rain's SDK lets an agent turn a prompt into a live market. buildCreateMarketTx
 takes marketQuestion and marketDescription as free text, plus one boolean,
@@ -57,12 +93,13 @@ WHAT BRIER DOES
    spec picks out exactly one. If two readings survive, the question is
    underspecified and is rejected with the defect named. Bad markets never open.
 
-3. Abstaining settlement. At oracleEndTime, N independent resolvers execute the
-   same spec — different models, independent fetches. Unanimous, and Brier calls
-   buildResolveMarketTx and publishes a receipt. Not unanimous, and Brier does
-   not settle. It abstains, flags the dispute, publishes every resolver's fetched
-   bytes and verdict, and hands the human oracle a pre-assembled evidence packet.
-   A wrong settlement is far more expensive than a slow one.
+3. Settlement is deliberately NOT the pitch. The unanimity gate is built and
+   correct -- unanimous settles with a receipt, anything less abstains and
+   escalates with evidence attached, and a resolver that could not read the
+   source counts as a hold rather than a vote. But that mechanism is published
+   prior art (the same paper measures it at 97.9% on 47%) and it is a funded
+   competitor's core product. Brier cites it instead of claiming it, and stays
+   compatible with whatever resolver a platform already runs.
 
 4. Receipts. Spec hash, source bytes hash, fetch timestamps, every verdict, the
    final action. The losing side can verify the settlement without trusting us.
@@ -187,20 +224,21 @@ resolver settle a question it should have held?
 ### Short version (~900 characters, if the field is capped)
 
 ```
-Rain's SDK lets an agent turn a prompt into a live market. But
-buildCreateMarketTx takes free-text marketQuestion and one boolean,
-isPublicPoolResolverAi — there is no structured field for the resolution source,
-the observation timestamp, the tie-break, or the ambiguity branch. Creation is
-industrialised; resolution is still prose. That is where prediction markets lose
-money: a governance attack flipped a Polymarket market 9% to 100%, and traders
-sued over a UMA resolution in July 2026 — all with hand-written rules.
+Every oracle works at the exit, on a question that already has money on it — and
+that has a measured ceiling. The latest multi-agent oracle evaluation (arXiv
+2605.30802) tops out at 83.4%, drops to 58-67% on Companies and Crypto, and finds
+13.8% of questions resist correction by any architecture. That floor is a
+property of the question, not the resolver.
 
-Brier is a Rain platform where every market carries a signed, machine-checkable
-resolution contract (source, field, timestamp, tie-break, void conditions),
-hashed into marketDescription so it cannot be reinterpreted. Questions that
-survive more than one reading are rejected before opening. At settlement, N
-independent resolvers run the same spec; unanimous settles with a public receipt,
-otherwise Brier abstains and hands the human oracle a prepared evidence packet.
+Brier works at the door. Every market created through it carries a signed,
+machine-checkable resolution contract — source, field, UTC instant, comparator,
+tie-break, void conditions — hashed into marketDescription, a field Rain already
+has, so no protocol change is needed. Questions that survive more than one reading
+never open. The same paper confirms nobody does this: "No admission-time screening
+is proposed or implemented."
+
+Surveying 1,192 live Polymarket markets holding $427M: 76% carry no fetchable
+resolution source, and that is 90% of the liquidity.
 
 It trades on Rain rails, so it generates volume and earns the 0.5% — and its
 receipts make honest volume legible, which protects the rebate from wash trading.
@@ -283,6 +321,12 @@ https://claude.ai/code/artifact/10fb7116-4199-4391-9454-3463d4f52bd4
 - The 0.5% share is paid in RAIN from the token allocation. In July 2026 RAIN
   traded near 75x its own product's TVL with roughly $7B team-controlled supply.
   Revenue denominated in that is not yet revenue. Do not model it as cash.
+- No claim to a moat on the mechanism. Admission screening is a lint and is
+  cloneable in a weekend, by Cournot or by Rain. The only defensible asset is a
+  corpus of questions labelled by someone else and tied to realised dispute
+  outcomes. That corpus does not exist yet, and Cournot is funded and shipping.
+- No claim to have invented unanimity gating. arXiv 2605.30802 measured it first
+  (97.9% accuracy on 47% of questions). Cite, do not claim.
 - No claim that resolution failure explains Rain's $1.3M marquee market. Sports
   resolution is easy; the argument is that the **long tail** is where resolution
   risk bites, and that is where agent-created markets are heading.

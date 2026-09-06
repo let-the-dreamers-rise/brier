@@ -4,46 +4,24 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 :root{
-  /* dark-first: the bare block is the committed palette */
-  --ground:#0c1016;
-  --panel:#141a23;
-  --panel-2:#1a222c;
-  --line:#26303c;
-  --line-soft:#1e2731;
-  --ink:#e6ebf2;
-  --ink-2:#aab6c6;
-  --dim:#7f8da0;
-  --faint:#5c6878;
-  --accent:#7ad7f0;        /* instrument cyan */
-  --accent-deep:#2e7f99;
-  --settled:#5ec9a7;       /* verdigris - market settled */
-  --abstain:#e8a33d;       /* panel amber - held, escalated */
-  --refused:#e0736b;       /* dusty red - rejected at admission */
+  --ground:#0c1016; --panel:#141a23; --panel-2:#1a222c;
+  --line:#26303c; --line-soft:#1e2731;
+  --ink:#e6ebf2; --ink-2:#aab6c6; --dim:#7f8da0; --faint:#5c6878;
+  --accent:#7ad7f0; --accent-deep:#2e7f99;
+  --admit:#5ec9a7; --repair:#e8a33d; --refuse:#e0736b;
   --shadow:0 1px 0 rgba(255,255,255,.03), 0 12px 32px rgba(0,0,0,.4);
-
   --display:"Newsreader","Iowan Old Style",Georgia,serif;
   --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-
-  --measure:66ch;
   --pad:clamp(20px,5vw,40px);
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme="dark"]){
-    --ground:#f7f8fa;
-    --panel:#ffffff;
-    --panel-2:#f0f3f7;
-    --line:#d7dee7;
-    --line-soft:#e4e9ef;
-    --ink:#131a23;
-    --ink-2:#3f4c5c;
-    --dim:#5f6d7e;
-    --faint:#8493a4;
-    --accent:#1c7f9e;
-    --accent-deep:#7ad7f0;
-    --settled:#1d8a6a;
-    --abstain:#a86a10;
-    --refused:#b4443a;
+    --ground:#f7f8fa; --panel:#ffffff; --panel-2:#f0f3f7;
+    --line:#d7dee7; --line-soft:#e4e9ef;
+    --ink:#131a23; --ink-2:#3f4c5c; --dim:#5f6d7e; --faint:#8493a4;
+    --accent:#1c7f9e; --accent-deep:#7ad7f0;
+    --admit:#1d8a6a; --repair:#a86a10; --refuse:#b4443a;
     --shadow:0 1px 2px rgba(16,24,32,.05), 0 10px 28px rgba(16,24,32,.07);
   }
 }
@@ -52,159 +30,116 @@
   --line:#d7dee7; --line-soft:#e4e9ef;
   --ink:#131a23; --ink-2:#3f4c5c; --dim:#5f6d7e; --faint:#8493a4;
   --accent:#1c7f9e; --accent-deep:#7ad7f0;
-  --settled:#1d8a6a; --abstain:#a86a10; --refused:#b4443a;
+  --admit:#1d8a6a; --repair:#a86a10; --refuse:#b4443a;
   --shadow:0 1px 2px rgba(16,24,32,.05), 0 10px 28px rgba(16,24,32,.07);
 }
-
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--ground);color:var(--ink);
-  font:16px/1.62 var(--sans);
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.62 var(--sans);
+     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .shell{max-width:1000px;margin:0 auto;padding:0 var(--pad)}
 
-/* ---------- masthead ---------- */
-.masthead{
-  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
-  padding:22px 0;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;
-}
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  padding:22px 0;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
 .wordmark{font:600 21px/1 var(--display);letter-spacing:-.01em}
 .wordmark span{color:var(--accent)}
 .station{font:500 11px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 
-/* ---------- hero ---------- */
-.hero{padding:clamp(44px,7vw,76px) 0 clamp(36px,5vw,52px)}
-.kicker{
-  font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:22px;
-}
-h1{
-  font:400 clamp(34px,5.6vw,56px)/1.1 var(--display);
-  letter-spacing:-.02em;margin:0 0 22px;text-wrap:balance;max-width:19ch;
-}
+.hero{padding:clamp(44px,7vw,76px) 0 clamp(34px,5vw,50px)}
+.kicker{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:22px}
+h1{font:400 clamp(32px,5.4vw,54px)/1.1 var(--display);letter-spacing:-.02em;
+   margin:0 0 22px;text-wrap:balance;max-width:20ch}
 h1 em{font-style:italic;color:var(--accent)}
-.lede{font-size:clamp(17px,2vw,19px);color:var(--ink-2);max-width:58ch;margin:0}
+.lede{font-size:clamp(17px,2vw,19px);color:var(--ink-2);max-width:60ch;margin:0}
 .lede strong{color:var(--ink);font-weight:500}
 
-/* ---------- generic sections ---------- */
-section{padding:clamp(40px,6vw,64px) 0;border-top:1px solid var(--line-soft)}
-.sec-label{
-  font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
-  color:var(--faint);margin:0 0 18px;
-}
-h2{font:500 clamp(24px,3.4vw,32px)/1.22 var(--display);letter-spacing:-.015em;
-   margin:0 0 18px;text-wrap:balance;max-width:24ch}
+section{padding:clamp(38px,6vw,62px) 0;border-top:1px solid var(--line-soft)}
+.sec-label{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 18px}
+h2{font:500 clamp(23px,3.3vw,31px)/1.22 var(--display);letter-spacing:-.015em;
+   margin:0 0 18px;text-wrap:balance;max-width:26ch}
 h3{font:600 15px/1.4 var(--sans);margin:0 0 8px;letter-spacing:-.005em}
-p{margin:0 0 16px;max-width:var(--measure)}
+p{margin:0 0 15px;max-width:68ch}
 p:last-child{margin-bottom:0}
 .dimtext{color:var(--dim)}
 a{color:var(--accent);text-underline-offset:3px}
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 
-/* ---------- instrument panel (the readout look) ---------- */
-.panel{
-  background:var(--panel);border:1px solid var(--line);border-radius:10px;
-  box-shadow:var(--shadow);overflow:hidden;
-}
-.panel-head{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  box-shadow:var(--shadow);overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:11px 16px;border-bottom:1px solid var(--line);background:var(--panel-2);
-  font:500 11px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
-  flex-wrap:wrap;
-}
+  font:500 11px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);flex-wrap:wrap}
 .panel-body{padding:18px 16px}
 .scroll-x{overflow-x:auto}
-
-/* code / spec readout */
 pre{margin:0;font:400 13px/1.75 var(--mono);color:var(--ink-2);tab-size:2}
-pre .k{color:var(--accent)}
-pre .s{color:var(--settled)}
-pre .c{color:var(--faint);font-style:italic}
-pre .w{color:var(--abstain)}
-code{font:500 .89em var(--mono);color:var(--accent);
-     background:var(--panel-2);border:1px solid var(--line-soft);
-     padding:1px 5px;border-radius:4px;white-space:nowrap}
+pre .k{color:var(--accent)} pre .s{color:var(--admit)}
+pre .c{color:var(--faint);font-style:italic} pre .w{color:var(--repair)}
+code{font:500 .89em var(--mono);color:var(--accent);background:var(--panel-2);
+  border:1px solid var(--line-soft);padding:1px 5px;border-radius:4px;white-space:nowrap}
 
-/* ---------- the gap: signature comparison ---------- */
-.sig{display:grid;gap:14px;grid-template-columns:1fr;margin-top:24px}
-@media(min-width:760px){.sig{grid-template-columns:1fr 1fr}}
-.field-list{list-style:none;margin:0;padding:0;font:400 13px/1.9 var(--mono)}
-.field-list li{display:flex;gap:10px;align-items:baseline}
-.field-list .fname{color:var(--ink-2)}
-.field-list .ftype{color:var(--faint);font-size:11.5px}
-.field-list .missing .fname{color:var(--refused);text-decoration:line-through;
-  text-decoration-color:color-mix(in srgb,var(--refused) 50%,transparent)}
-.field-list .missing .ftype{color:var(--refused);opacity:.8;text-decoration:none}
+/* ceiling figures */
+.figs{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;margin:20px 0}
+@media(min-width:760px){.figs{grid-template-columns:repeat(3,1fr)}}
+.fig{background:var(--panel);padding:20px}
+.fig .n{font:600 clamp(28px,4vw,36px)/1.1 var(--mono);letter-spacing:-.02em}
+.fig .n.bad{color:var(--refuse)} .fig .n.good{color:var(--admit)}
+.fig .cap{font-size:13.5px;color:var(--dim);margin-top:8px}
 
-/* ---------- three mechanics ---------- */
-.mechs{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
-       border-radius:10px;overflow:hidden;margin-top:8px}
-@media(min-width:820px){.mechs{grid-template-columns:repeat(3,1fr)}}
-.mech{background:var(--panel);padding:22px 20px;display:flex;flex-direction:column;gap:10px}
-.mech .stage{font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
-.mech p{font-size:14.5px;color:var(--dim);margin:0;max-width:none}
-.mech .verdict{
-  margin-top:auto;padding-top:12px;font:500 11px/1.5 var(--mono);
-  letter-spacing:.06em;text-transform:uppercase;
-}
-.mech.a .verdict{color:var(--refused)}
-.mech.b .verdict{color:var(--accent)}
-.mech.c .verdict{color:var(--abstain)}
+/* door: who stands where */
+.band{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;margin:20px 0}
+@media(min-width:780px){.band{grid-template-columns:1fr 1fr}}
+.half{background:var(--panel);padding:22px 20px}
+.half .lbl{font:500 10px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:10px}
+.half .state{font:600 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.half.taken .state{color:var(--refuse)} .half.open .state{color:var(--admit)}
+.half ul{margin:0;padding-left:18px} .half li{margin-bottom:7px;color:var(--dim);font-size:14.5px}
 
-/* ---------- settlement readout (interactive) ---------- */
-.readout{margin-top:8px}
-.resolvers{display:flex;flex-direction:column;gap:1px;background:var(--line-soft)}
-.rsv{
-  display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;
-  background:var(--panel);padding:13px 16px;font:400 13px/1.4 var(--mono);
-}
-.rsv .id{color:var(--faint);letter-spacing:.08em}
-.rsv .val{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rsv .vd{font-weight:600;letter-spacing:.06em;min-width:4ch;text-align:right}
-.rsv .vd[data-v="YES"]{color:var(--settled)}
-.rsv .vd[data-v="NO"]{color:var(--abstain)}
-.flip{
-  font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
-  color:var(--dim);background:var(--panel-2);border:1px solid var(--line);
-  padding:6px 10px;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s;
-}
-.flip:hover{color:var(--accent);border-color:var(--accent-deep)}
-.outcome{
-  padding:18px 16px;border-top:1px solid var(--line);
-  display:flex;gap:14px;align-items:flex-start;
-}
+/* interactive grader */
+.picker{display:flex;flex-direction:column;gap:1px;background:var(--line-soft)}
+.q{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  background:var(--panel);padding:13px 16px;text-align:left;width:100%;
+  border:0;cursor:pointer;font:inherit;color:var(--ink);transition:background .15s}
+.q:hover{background:var(--panel-2)}
+.q[aria-selected="true"]{background:var(--panel-2);box-shadow:inset 3px 0 0 var(--accent)}
+.q .qt{font-size:14px;line-height:1.45}
+.q .ql{font:500 11px/1 var(--mono);color:var(--faint);white-space:nowrap}
+.out{padding:20px 16px;border-top:1px solid var(--line);display:flex;gap:14px;align-items:flex-start}
 .lamp{width:9px;height:9px;border-radius:50%;flex:none;margin-top:7px;
-      box-shadow:0 0 0 4px color-mix(in srgb,currentColor 16%,transparent)}
-.outcome .state{font:600 13px/1.5 var(--mono);letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
-.outcome .detail{font-size:14px;color:var(--dim);max-width:56ch;margin:0}
-.outcome[data-state="settled"]{color:var(--settled)}
-.outcome[data-state="abstained"]{color:var(--abstain)}
-.outcome .detail code{white-space:normal}
-@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+  box-shadow:0 0 0 4px color-mix(in srgb,currentColor 16%,transparent)}
+.out .verdict{font:600 13px/1.5 var(--mono);letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+.out .detail{font-size:14.5px;color:var(--dim);max-width:60ch;margin:0}
+.out[data-v="ADMIT"]{color:var(--admit)}
+.out[data-v="REPAIR"]{color:var(--repair)}
+.out[data-v="REFUSE"]{color:var(--refuse)}
+.out .detail code{white-space:normal}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
 
-/* ---------- ships / list ---------- */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:500 10.5px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+td.num{font:500 14px/1.4 var(--mono);text-align:right;white-space:nowrap;
+  font-variant-numeric:tabular-nums;color:var(--ink)}
+td.note{color:var(--dim)}
+
 .ships{list-style:none;margin:0;padding:0;display:grid;gap:1px;
-       background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .ships li{background:var(--panel);padding:15px 18px;display:grid;
-          grid-template-columns:auto 1fr;gap:16px;align-items:baseline;font-size:14.5px;color:var(--dim)}
+  grid-template-columns:auto 1fr;gap:16px;align-items:baseline;font-size:14.5px;color:var(--dim)}
 .ships .wk{font:500 10.5px/1.6 var(--mono);letter-spacing:.1em;text-transform:uppercase;
-           color:var(--faint);white-space:nowrap}
+  color:var(--faint);white-space:nowrap}
 .ships b{color:var(--ink);font-weight:500}
 
-/* ---------- facts ---------- */
-.facts{width:100%;border-collapse:collapse;font-size:14px}
-.facts th,.facts td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line-soft)}
-.facts tr:last-child td{border-bottom:0}
-.facts th{font:500 10.5px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-.facts td.num{font:500 14px/1.4 var(--mono);text-align:right;white-space:nowrap;
-              font-variant-numeric:tabular-nums;color:var(--ink)}
-.facts td.note{color:var(--dim)}
+.caveat{border-color:var(--repair)}
+.caveat .panel-head{color:var(--repair)}
 
-/* ---------- footer ---------- */
 footer{border-top:1px solid var(--line-soft);padding:32px 0 56px;
-       display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
-       font:400 12.5px/1.7 var(--mono);color:var(--faint)}
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font:400 12.5px/1.7 var(--mono);color:var(--faint)}
 footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line)}
 footer a:hover{color:var(--accent)}
 </style>
@@ -213,178 +148,125 @@ footer a:hover{color:var(--accent)}
 
   <div class="masthead">
     <div class="wordmark">Brier<span>.</span></div>
-    <div class="station">Resolution layer &middot; Rain protocol &middot; Arbitrum One</div>
+    <div class="station">Admission layer &middot; Rain protocol &middot; Arbitrum One</div>
   </div>
 
   <div class="hero">
-    <div class="kicker">Prediction markets that know when to stop</div>
-    <h1>Every market ships with a <em>resolution contract</em>, or it doesn't ship.</h1>
-    <p class="lede">Rain lets an agent turn a prompt into a live market. Brier is the layer that
-    decides whether that market can be settled at all &mdash; and <strong>refuses to settle it when
-    the evidence disagrees.</strong></p>
+    <div class="kicker">Screening for agent-created prediction markets</div>
+    <h1>You cannot resolve your way past a <em>bad question</em>.</h1>
+    <p class="lede">Every oracle in this market works at the exit, on a question that already has
+    money on it. Brier works at the door. <strong>A market that cannot be settled never
+    opens.</strong></p>
   </div>
 
   <section>
-    <p class="sec-label">01 &mdash; The observation</p>
-    <h2>Market creation got automated. Market resolution didn't.</h2>
-    <p>This is the call that creates a market on Rain. It is the whole interface between
-    &ldquo;an agent had an idea&rdquo; and &ldquo;real money is now at risk.&rdquo;</p>
+    <p class="sec-label">01 &mdash; The ceiling</p>
+    <h2>Better resolution has a measured limit, and the question sets it.</h2>
+    <p>These are not our numbers. They are from the most recent evaluation of multi-agent AI oracles
+    &mdash; three models, evidence retrieval, confidence-weighted aggregation, run over 1,189
+    KalshiBench questions.</p>
 
-    <div class="sig">
-      <div class="panel">
-        <div class="panel-head"><span>buildCreateMarketTx &mdash; accepts</span><span>rain-sdk</span></div>
-        <div class="panel-body">
-          <ul class="field-list">
-            <li><span class="fname">marketQuestion</span><span class="ftype">free text</span></li>
-            <li><span class="fname">marketDescription</span><span class="ftype">free text</span></li>
-            <li><span class="fname">isPublicPoolResolverAi</span><span class="ftype">boolean</span></li>
-            <li><span class="fname">startTime / endTime</span><span class="ftype">uint</span></li>
-            <li><span class="fname">barValues</span><span class="ftype">uint[]</span></li>
-            <li><span class="fname">baseToken</span><span class="ftype">address</span></li>
-          </ul>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-head"><span>Not accepted &mdash; anywhere</span><span>the gap</span></div>
-        <div class="panel-body">
-          <ul class="field-list">
-            <li class="missing"><span class="fname">resolutionSource</span><span class="ftype">which instrument settles it</span></li>
-            <li class="missing"><span class="fname">selector</span><span class="ftype">which field is read</span></li>
-            <li class="missing"><span class="fname">observedAt</span><span class="ftype">at what instant</span></li>
-            <li class="missing"><span class="fname">comparator</span><span class="ftype">against what threshold</span></li>
-            <li class="missing"><span class="fname">tiebreak</span><span class="ftype">when two readings tie</span></li>
-            <li class="missing"><span class="fname">voidIf</span><span class="ftype">when the question was bad</span></li>
-          </ul>
-        </div>
-      </div>
+    <div class="figs">
+      <div class="fig"><div class="n">83.4%</div>
+        <div class="cap">Best accuracy any architecture reached. Deliberation made it
+        <i>worse</i> &mdash; 76.1% &mdash; as confident models flipped correct ones.</div></div>
+      <div class="fig"><div class="n bad">13.8%</div>
+        <div class="cap">164 of 1,189 questions resist correction by <b>any</b> multi-agent approach.
+        The authors call it &ldquo;a hard core of failures.&rdquo;</div></div>
+      <div class="fig"><div class="n good">97.9%</div>
+        <div class="cap">Accuracy once you keep only unanimous, high-confidence answers &mdash; on 47%
+        of the set. The rest has to go to a human.</div></div>
     </div>
 
-    <p style="margin-top:26px">The entire settlement specification is prose plus one boolean. That is
-    survivable when a careful human writes the rules text and a bonded human panel reads it. It is not
-    survivable at machine speed.</p>
-    <p class="dimtext">And even the careful version breaks. A governance attack moved Polymarket's
-    Ukraine mineral-deal market from 9% to 100% and settled &ldquo;Yes&rdquo; with no agreement in
-    place, on five million UMA cast across three accounts. The <i>Wall Street Journal</i> found that in
-    most disputed markets, more than half the votes came from ten wallets. Traders sued over a
-    resolution in July 2026. Ambiguous events settle 50-50, so a trader who was demonstrably right
-    gets back half their stake.</p>
+    <p>Error correlation between models runs r=0.53&ndash;0.69, which the authors say places
+    &ldquo;a fundamental limit on ensemble-based approaches.&rdquo; Adding models does not clear it.
+    On Companies, Crypto and Economics the best architecture lands at <b>58&ndash;67%</b> and stays
+    there.</p>
+    <p style="margin-bottom:0">So there is a floor of questions that no resolver will ever get right,
+    and it is a property of the question rather than the resolver. The only place that floor can be
+    raised is before the market opens.</p>
   </section>
 
   <section>
-    <p class="sec-label">02 &mdash; The instrument</p>
-    <h2>A resolution contract is an observation specification.</h2>
-    <p>Glenn Brier was a meteorologist. In 1950 he published the scoring rule that made weather
-    forecasts falsifiable, and it works because a weather observation names its instrument, its
-    units, and its moment before anyone forecasts anything. A market question deserves the same
-    discipline.</p>
-    <p>Every market created through Brier carries this, signed. The hash goes on-chain in
-    <code>marketDescription</code> &mdash; a field Rain already has &mdash; so the rules cannot be
-    reinterpreted after the outcome is known. <strong>No protocol change required.</strong></p>
+    <p class="sec-label">02 &mdash; The door</p>
+    <h2>Everyone is standing at the exit.</h2>
+    <p>The same paper says what nobody is doing, in its own words:</p>
+    <p style="border-left:2px solid var(--accent);padding-left:15px;color:var(--ink-2)">
+    &ldquo;No admission-time screening is proposed or implemented &hellip; questions fundamentally
+    unsuitable for automated resolution are identified through error analysis <b>post-hoc rather than
+    filtered pre-resolution</b>.&rdquo;</p>
 
-    <div class="panel scroll-x" style="margin-top:22px">
+    <div class="band">
+      <div class="half taken">
+        <div class="lbl">At the exit &mdash; after money is at risk</div>
+        <div class="state">Crowded and funded</div>
+        <ul>
+          <li><b>Cournot</b> &mdash; AI-native oracle, YZi Labs backed, live as the resolution layer for 42</li>
+          <li><b>UMA</b> &mdash; optimistic oracle, settles Polymarket</li>
+          <li><b>Kleros + Reality.eth</b> &mdash; bonded escalation into juror arbitration</li>
+          <li><b>Tellor</b>, and the published multi-agent architectures</li>
+        </ul>
+      </div>
+      <div class="half open">
+        <div class="lbl">At the door &mdash; before a market opens</div>
+        <div class="state">Nobody</div>
+        <ul>
+          <li>Kalshi comes closest &mdash; but by lawyers drafting contract terms per market and filing
+          them with the CFTC. Correct, and it cannot scale to markets an agent writes from a prompt.</li>
+          <li>Rain's <code>buildCreateMarketTx</code> has no resolution field at all</li>
+          <li>Polymarket has a <code>resolutionSource</code> field and leaves it empty on 76% of markets</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><b>This makes Cournot a customer, not a competitor.</b> A better resolver still inherits
+    whatever question it is handed. Brier improves the input to every one of them &mdash; the same way
+    a type checker does not compete with the runtime.</p>
+  </section>
+
+  <section>
+    <p class="sec-label">03 &mdash; What gets checked</p>
+    <h2>Real markets, real verdicts.</h2>
+    <p>These are live Polymarket markets, taken from their public API with their real liquidity. The
+    verdicts come from <code>src/grader.mjs</code> in this repo. Pick one.</p>
+
+    <div class="panel" style="margin-top:20px">
+      <div class="panel-head"><span>Admission grader</span><span>live markets &middot; 2026-09-07</span></div>
+      <div class="picker" id="picker"></div>
+      <div class="out" id="out" data-v="REFUSE" aria-live="polite">
+        <span class="lamp"></span>
+        <div><div class="verdict" id="verdict">Refuse</div>
+        <p class="detail" id="detail">Pick a market above.</p></div>
+      </div>
+    </div>
+
+    <p style="margin-top:24px">A market that passes carries a signed <b>resolution contract</b> &mdash;
+    source, the exact field, the observation instant in UTC, the comparator, the tie-break, and the
+    conditions under which it voids. It is hashed into <code>marketDescription</code>, a field Rain
+    already has, so the rule is fixed and public before anyone takes a position. <b>No protocol change
+    required.</b></p>
+
+    <div class="panel scroll-x" style="margin-top:18px">
       <div class="panel-head"><span>ResolutionSpec &middot; sha256 50b608d4&hellip;85df</span><span>signed at creation</span></div>
       <div class="panel-body"><pre>{
-  <span class="k">"question"</span>:    <span class="s">"Top ARC-AGI-3 semi-private score above 15% on 2026-12-31?"</span>,
   <span class="k">"source"</span>:      <span class="s">"https://arcprize.org/leaderboard"</span>,
   <span class="k">"selector"</span>:    <span class="s">"$.arc_agi_3.semi_private[0].score"</span>,
-  <span class="k">"observed_at"</span>: <span class="s">"2026-12-31T23:59:59Z"</span>,        <span class="c">// UTC, not "end of year"</span>
+  <span class="k">"observed_at"</span>: <span class="s">"2026-12-31T23:59:59Z"</span>,   <span class="c">// UTC, not "end of year"</span>
   <span class="k">"unit"</span>:        <span class="s">"percent"</span>,
   <span class="k">"comparator"</span>:  <span class="s">"&gt; 15.0"</span>,
   <span class="k">"tiebreak"</span>:    <span class="s">"earliest submission timestamp wins"</span>,
-  <span class="k">"void_if"</span>: [
-    <span class="w">"source unreachable for 24h after observed_at"</span>,
-    <span class="w">"field absent or non-numeric"</span>,
-    <span class="w">"scoring methodology revised after market open"</span>
-  ],
-  <span class="k">"fallback"</span>:    <span class="w">"abstain"</span>              <span class="c">// never guess</span>
+  <span class="k">"void_if"</span>:     [<span class="w">"source unreachable 24h after observed_at"</span>, <span class="w">&hellip;</span>],
+  <span class="k">"fallback"</span>:    <span class="w">"abstain"</span>            <span class="c">// never guess</span>
 }</pre></div>
     </div>
   </section>
 
   <section>
-    <p class="sec-label">03 &mdash; The method</p>
-    <h2>Three gates, and only one of them settles anything.</h2>
-
-    <div class="mechs">
-      <div class="mech a">
-        <div class="stage">Before open</div>
-        <h3>Admission grading</h3>
-        <p>The spec is dry-run against the live source, then attacked: enumerate the plausible readings
-        of the question and check whether the spec picks out exactly one. If two readings survive, the
-        question is underspecified.</p>
-        <div class="verdict">&rarr; Refused, with the defect named</div>
-      </div>
-      <div class="mech b">
-        <div class="stage">At open</div>
-        <h3>Contract binding</h3>
-        <p>The spec is hashed and written on-chain with the market. Traders price a question whose
-        settlement rule is fixed and public before they take a position &mdash; not one that gets
-        interpreted afterwards.</p>
-        <div class="verdict">&rarr; Market opens, rules frozen</div>
-      </div>
-      <div class="mech c">
-        <div class="stage">At oracleEndTime</div>
-        <h3>Abstaining settlement</h3>
-        <p>N independent resolvers execute the same spec &mdash; different models, independent fetches.
-        Unanimous settles. Anything less does not settle at all: it abstains and escalates with the
-        evidence attached.</p>
-        <div class="verdict">&rarr; Settle, or hold and escalate</div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <p class="sec-label">04 &mdash; The readout</p>
-    <h2>A wrong settlement costs more than a slow one.</h2>
-    <p>This is the settlement gate. The rule below is the one in <code>src/settle.mjs</code>, and the
-    hashes are real sha256 of the bytes shown. The three verdicts are an <b>example panel</b>, not a
-    live fetch. Flip any resolver and watch what Brier does with a split.</p>
-
-    <div class="panel readout">
-      <div class="panel-head"><span>Settlement gate &middot; example panel</span><span id="clock">observed_at 2026-12-31T23:59:59Z</span></div>
-      <div class="resolvers" id="resolvers">
-        <div class="rsv">
-          <span class="id">RSV-A</span>
-          <span class="val">read 15.7 &middot; sha256 3303dbbd&hellip;</span>
-          <span class="vd" data-v="YES">YES</span>
-          <button class="flip" data-i="0" type="button">flip</button>
-        </div>
-        <div class="rsv">
-          <span class="id">RSV-B</span>
-          <span class="val">read 15.7 &middot; sha256 3303dbbd&hellip;</span>
-          <span class="vd" data-v="YES">YES</span>
-          <button class="flip" data-i="1" type="button">flip</button>
-        </div>
-        <div class="rsv">
-          <span class="id">RSV-C</span>
-          <span class="val">read 15.7 &middot; sha256 3303dbbd&hellip;</span>
-          <span class="vd" data-v="YES">YES</span>
-          <button class="flip" data-i="2" type="button">flip</button>
-        </div>
-      </div>
-      <div class="outcome" id="outcome" data-state="settled" aria-live="polite">
-        <span class="lamp"></span>
-        <div>
-          <div class="state" id="ostate">Settled &mdash; unanimous</div>
-          <p class="detail" id="odetail">All three resolvers read the same value from the named source.
-          <code>buildResolveMarketTx</code> is called and a receipt is published: spec hash, source
-          bytes hash, fetch timestamps, every verdict.</p>
-        </div>
-      </div>
-    </div>
-
-    <p style="margin-top:24px" class="dimtext">The receipt is the point. Whoever lost the trade can
-    recompute the settlement from published bytes without trusting us, the model, or Rain. That is
-    the part a website cannot do and an escrow can.</p>
-  </section>
-
-  <section>
-    <p class="sec-label">05 &mdash; The measurement</p>
+    <p class="sec-label">04 &mdash; The evidence</p>
     <h2>$384M of live liquidity sits on markets with no machine-readable source.</h2>
-    <p>This is the part that needs no opinion from us. Polymarket publishes a
-    <code>resolutionSource</code> field on every market. Either it holds a fetchable URL or it does
-    not. Counting that is a fact about their data, so it cannot be circular.</p>
-    <p>Surveyed every open market their public API returns, ranked by liquidity:</p>
+    <p>This part needs no opinion from anyone. Polymarket publishes a <code>resolutionSource</code>
+    field per market. It either holds a fetchable URL or it does not. Surveyed every open market their
+    public API returns:</p>
 
     <div class="panel scroll-x" style="margin-top:20px">
       <div class="panel-head"><span>node bin/survey.mjs</span><span>1,192 open markets &middot; $427.0M liquidity</span></div>
@@ -394,66 +276,51 @@ footer a:hover{color:var(--accent)}
 settles on human judgement      <span class="w">864/1192</span>   <span class="w">72.5%</span>
   as a share of liquidity       <span class="w">$295.5M</span>   <span class="w">69.2%</span>
 
-<span class="c">// "settles on human judgement" = the description defers to phrasing</span>
-<span class="c">// like "a consensus of credible reporting" instead of an instrument.</span></pre></div>
+<span class="c">// "human judgement" = the description defers to phrasing like</span>
+<span class="c">// "a consensus of credible reporting" instead of an instrument.</span></pre></div>
     </div>
 
-    <p style="margin-top:22px">Nine of the ten deepest books with no fetchable source are the 2028
-    Democratic nomination ladder &mdash; $2.8M each on Kim Kardashian, MrBeast, Oprah &mdash; every one
-    of them settling on &ldquo;a consensus.&rdquo; The deepest of all, at $3.0M, asks whether the Fed
-    cuts 25bps in September, and names no source at all.</p>
+    <p style="margin-top:22px">Nine of the ten deepest sourceless books are the 2028 Democratic
+    nomination ladder &mdash; $2.8M each on Kim Kardashian, MrBeast, Oprah &mdash; every one settling
+    on &ldquo;a consensus.&rdquo;</p>
 
-    <p>The grader also finds the attack pattern alive and unpatched. It refuses
-    <span style="color:var(--abstain)">&ldquo;Iran agrees to end enrichment of uranium by December 31?&rdquo;</span>
-    on the same unresolvable predicate &mdash; <b>agrees</b> &mdash; that it fires on the Ukraine
-    minerals market whose odds were driven 9% to 100% and settled Yes with no agreement in place.
-    Same defect, different war, still open, still taking money.</p>
-
-    <div class="panel" style="margin-top:24px;border-color:var(--abstain)">
-      <div class="panel-head" style="color:var(--abstain)"><span>Where the grader is weaker than the headline</span><span>read this before quoting it</span></div>
+    <div class="panel caveat" style="margin-top:20px">
+      <div class="panel-head"><span>Where the grader is weaker than that headline</span><span>read before quoting</span></div>
       <div class="panel-body">
-        <p style="margin:0 0 12px;color:var(--dim);font-size:14.5px">The survey above needs no
-        labelling. The grader's own accuracy is a separate and more modest claim, and these are its
-        real numbers over the same 1,192 markets:</p>
-        <pre style="font-size:12.5px">refused unrewritably     <span class="w">9/1192</span>   0.8%   <span class="c">// no spec field can save these</span>
-SUPERLATIVE_UNTIED     <span class="w">102</span>      8.6%
-TEMPORAL_VAGUE          <span class="w">83</span>      7.0%
-VAGUE_PREDICATE          <span class="w">9</span>      0.8%</pre>
-        <p style="margin:12px 0 0;color:var(--dim);font-size:14.5px">Three honest caveats. The grader
-        refuses <i>all</i> 1,192 on structural grounds, but that is an artifact and not a finding &mdash;
-        Polymarket has no selector or void-branch fields to populate, so the check is trivially true
-        and we do not count it. <b>TEMPORAL_VAGUE over-fires</b>: it flags &ldquo;before 2027&rdquo;,
-        which is precise apart from the timezone, so treat that 7.0% as an upper bound on a minor
-        defect. And the probes are lexical, not semantic &mdash; they catch constructs that have
-        empirically produced disputes and will miss a question ambiguous for a reason no probe knows
-        about.</p>
-        <p style="margin:12px 0 0;color:var(--dim);font-size:14.5px">The strongest grader result is
-        the narrow one: the <code>VAGUE_PREDICATE</code> cluster is real, it is the same defect that
-        was exploited for money, and it is still live on Polymarket today.</p>
+        <p style="margin:0 0 12px;color:var(--dim);font-size:14.5px">The survey needs no labelling.
+        The grader's own accuracy is a separate and more modest claim over those same markets:
+        <b>0.8% refused unrewritably</b>, SUPERLATIVE_UNTIED 8.6%, TEMPORAL_VAGUE 7.0%,
+        VAGUE_PREDICATE 0.8%.</p>
+        <p style="margin:0;color:var(--dim);font-size:14.5px">Three caveats. The grader refuses all
+        1,192 on structural grounds, but that is an artifact and not a finding &mdash; Polymarket has
+        no selector or void-branch fields to populate. <b>TEMPORAL_VAGUE over-fires</b>: it flags
+        &ldquo;before 2027&rdquo;, precise apart from timezone, so read 7.0% as an upper bound on a
+        minor defect. And the probes are lexical, not semantic; they catch constructs that have
+        empirically caused disputes and will miss a question ambiguous for a reason no probe knows
+        about. A 20-question adversarial corpus in the repo passes 20/20, and that number is circular
+        &mdash; one author wrote both labels and probes &mdash; so it is a regression test, not
+        evidence.</p>
       </div>
     </div>
-
-    <p style="margin-top:24px" class="dimtext">A separate 20-question adversarial corpus, covered by
-    35 tests, sits in the repo. It passes 20/20, and that number is circular &mdash; one author wrote
-    both the labels and the probes &mdash; so it is a regression test, not evidence.</p>
   </section>
 
   <section>
-    <p class="sec-label">06 &mdash; Why this, on Rain, now</p>
-    <h2>Liquidity is not the constraint. Trustworthy market supply is.</h2>
+    <p class="sec-label">05 &mdash; Why Rain</p>
+    <h2>Creation got automated. Screening did not.</h2>
+    <p>Rain's pitch is that an agent turns a prompt into a live market with no manual coding. Its
+    creation call takes <code>marketQuestion</code> and <code>marketDescription</code> as free text
+    plus one boolean, <code>isPublicPoolResolverAi</code>. There is no field for the source, the
+    instant, the tie-break, or the void branch. Market creation at machine speed, settlement rules
+    still in prose.</p>
 
     <div class="panel scroll-x">
-      <table class="facts">
-        <thead>
-          <tr><th>Rain, measured</th><th style="text-align:right">Value</th><th>Reading</th></tr>
-        </thead>
+      <table>
+        <thead><tr><th>Rain, measured</th><th style="text-align:right">Value</th><th>Reading</th></tr></thead>
         <tbody>
           <tr><td>Total value locked</td><td class="num">$100.1M</td>
               <td class="note">After Rain committed $100M of its own. Capital is solved.</td></tr>
           <tr><td>Cumulative volume</td><td class="num">$142.4M</td>
-              <td class="note">Against that liquidity, thin. Volume is the scarce good.</td></tr>
-          <tr><td>Traders</td><td class="num">36.6K</td>
-              <td class="note">Fewer people than a mid-size forum.</td></tr>
+              <td class="note">Thin against that liquidity. Volume is the scarce good.</td></tr>
           <tr><td>Marquee World Cup market</td><td class="num">$1.3M</td>
               <td class="note">The next ten did $40K&ndash;$300K each.</td></tr>
           <tr><td>Builder revenue share</td><td class="num">0.5%</td>
@@ -462,93 +329,103 @@ VAGUE_PREDICATE          <span class="w">9</span>      0.8%</pre>
       </table>
     </div>
 
-    <p style="margin-top:26px">Brier is a platform, not an oracle sitting outside the flow. Markets are
-    created and traded through it on Rain rails, so it generates volume and earns that 0.5%.</p>
-    <p>It also protects it. A flat rebate on volume invites wash trading &mdash; agents cycling size
-    against each other to farm the rebate. Receipts make honest volume legible and self-dealing
-    obvious. <strong>Brier defends the grant budget instead of mining it.</strong></p>
+    <p style="margin-top:24px">Brier is a platform, not a service sitting outside the flow &mdash;
+    markets are created and traded through it on Rain rails, so it generates volume and earns that
+    0.5%. A flat rebate on volume also invites wash trading, and screening plus receipts makes honest
+    volume legible. <b>It defends the grant budget rather than mining it.</b></p>
   </section>
 
   <section>
-    <p class="sec-label">07 &mdash; What ships</p>
-    <h2>Two of these are already done.</h2>
+    <p class="sec-label">06 &mdash; What ships</p>
+    <h2>The mechanism runs. The corpus is the company.</h2>
     <ul class="ships">
-      <li><span class="wk">Done</span><span><b>Spec schema and signer.</b> Canonical serialisation,
-        sha256, and the binding into <code>marketDescription</code>. Order-independent, so two specs
-        that mean the same thing hash the same. <code>src/spec.mjs</code></span></li>
-      <li><span class="wk">Done</span><span><b>Admission grader and settlement gate.</b> Six ambiguity
-        probes, the unanimity rule, and the escalation packet. A resolver that could not read is
-        counted as a hold, never a vote. <code>src/grader.mjs</code>, <code>src/settle.mjs</code></span></li>
-      <li><span class="wk">Next</span><span><b>An independently labelled corpus.</b> Someone other than
-        the author labels 100 questions, so the number above stops being circular.</span></li>
-      <li><span class="wk">Next</span><span><b>Live resolvers.</b> Real fetches against real sources,
-        replacing the example panel above.</span></li>
-      <li><span class="wk">Then</span><span><b>Market surface.</b> Creation and trading on the Rain SDK
-        with account abstraction, and a public receipt page per market.</span></li>
+      <li><span class="wk">Done</span><span><b>Resolution contracts.</b> Canonical serialisation,
+        sha256, binding into <code>marketDescription</code>. Order-independent, so two specs meaning
+        the same thing hash the same. <code>src/spec.mjs</code></span></li>
+      <li><span class="wk">Done</span><span><b>Admission grader.</b> Six probes for constructs that
+        admit more than one reading; each names the field that would collapse it. Two force a rewrite.
+        <code>src/grader.mjs</code></span></li>
+      <li><span class="wk">Done</span><span><b>Survey harness.</b> 1,192 live markets measured, cached
+        and reproducible. <code>bin/survey.mjs</code> &middot; 35 tests passing</span></li>
+      <li><span class="wk">Next</span><span><b>An independently labelled corpus.</b> Questions labelled
+        by someone who is not the author, tied to what actually happened to those markets. This is the
+        only defensible asset here &mdash; a lint is cloneable in a weekend, a corpus is not.</span></li>
+      <li><span class="wk">Next</span><span><b>Market creation on Rain.</b> Screened markets opening
+        through the SDK, each with a public contract and receipt page.</span></li>
     </ul>
-    <p style="margin-top:26px" class="dimtext">Launch vertical is AI outcomes &mdash; model releases,
-    benchmark scores, competition results &mdash; because those sources are machine-readable, which
-    makes the spec discipline provable on day one instead of aspirational.</p>
+    <p style="margin-top:22px" class="dimtext">The unanimity gate for settlement is built
+    (<code>src/settle.mjs</code>) and is deliberately <b>not</b> the pitch. That mechanism is published
+    prior art and a funded competitor's core product. It is kept because it is correct, and it is
+    cited rather than claimed.</p>
   </section>
 
   <footer>
-    <div>Brier &middot; a resolution layer for agent-created markets<br>
+    <div>Brier &middot; admission screening for agent-created markets<br>
     Built on <a href="https://www.rain.one/">Rain</a> &middot; Arbitrum One &middot; 2026</div>
-    <div>Applying to Rain Builder Grants<br>
-    <a href="https://github.com/rain1-labs/rain-sdk">rain-sdk</a> &middot; grader and settlement gate implemented, 35 tests passing &middot; no markets live yet</div>
+    <div>Grader, contracts and survey implemented &middot; 35 tests passing<br>
+    No markets live yet &middot; <a href="https://arxiv.org/html/2605.30802v1">ceiling figures: arXiv 2605.30802</a></div>
   </footer>
 
 </div>
 
 <script>
 (function(){
-  // Byte hashes are real sha256 of the values shown, so a reader can recompute them.
-  var HASH = {
-    "15.7": "3303dbbd", "15.0": "c72ae967", "14.9": "142010b8"
-  };
-  var verdicts = ["YES","YES","YES"];
-  var values   = ["15.7","15.7","15.7"];
-  var alt      = ["15.0","14.9","14.9"];
-  var rows = document.querySelectorAll("#resolvers .rsv");
-  var outcome = document.getElementById("outcome");
-  var ostate  = document.getElementById("ostate");
-  var odetail = document.getElementById("odetail");
+  // Real questions from Polymarket's public API with their real liquidity.
+  // Verdicts and probe codes are the actual output of src/grader.mjs.
+  var CASES = [
+    { q: "Will the Fed decrease interest rates by 25 bps after the September 2026 meeting?",
+      liq: "$3.05M", v: "REPAIR", label: "Repairable — the question is fine, the spec is missing",
+      d: "No probe fires: this is a well-posed question. It is still refused, because Polymarket's " +
+         "<code>resolutionSource</code> is empty — no instrument is named. The deepest book in the " +
+         "survey, and nothing says where the answer comes from. One field fixes it." },
+    { q: "Iran agrees to end enrichment of uranium by December 31?",
+      liq: "$0.10M", v: "REFUSE", label: "Refuse — rewrite required",
+      d: "<b>VAGUE_PREDICATE</b> on <i>agrees</i> — the predicate is a judgement call, so no source " +
+         "can be read to settle it. No spec field repairs this. It is the same defect as the Ukraine " +
+         "minerals market whose odds were driven 9% to 100% and settled Yes with no agreement in place." },
+    { q: "Will Alibaba have the best AI model at the end of September 2026?",
+      liq: "$0.08M", v: "REPAIR", label: "Repairable — set a tie-break",
+      d: "<b>SUPERLATIVE_UNTIED</b> on <i>best</i>. This market does name a source — an arena " +
+         "leaderboard — but <i>best</i> is undefined the moment two models tie, and leaderboards " +
+         "tie constantly. Add <code>tiebreak</code> and it opens." },
+    { q: "Will NVIDIA be the largest company in the world by market cap on September 30?",
+      liq: "$0.08M", v: "REPAIR", label: "Repairable — name a source and a tie-break",
+      d: "<b>SUPERLATIVE_UNTIED</b> on <i>largest</i>, and no source named. Market cap is measurable, " +
+         "so this is a good question missing its instrument — which exchange, at which close, in " +
+         "which currency." },
+    { q: "Xi Jinping out before 2027?",
+      liq: "$0.22M", v: "REPAIR", label: "Repairable — but read the caveat",
+      d: "<b>TEMPORAL_VAGUE</b> on <i>before 2027</i>. This is the probe that over-fires: the date is " +
+         "precise apart from timezone. The real defect is elsewhere — the description says it settles " +
+         "on “a consensus of credible reporting”, which is prose, not an instrument." }
+  ];
 
-  function render(){
-    for (var i=0;i<rows.length;i++){
-      var vd = rows[i].querySelector(".vd");
-      var val = rows[i].querySelector(".val");
-      vd.setAttribute("data-v", verdicts[i]);
-      vd.textContent = verdicts[i];
-      var shown = verdicts[i] === "YES" ? values[i] : alt[i];
-      val.textContent = "read " + shown + " · sha256 " + HASH[shown] + "…";
-    }
-    var yes = verdicts.filter(function(v){return v==="YES"}).length;
-    if (yes === 3 || yes === 0){
-      outcome.setAttribute("data-state","settled");
-      ostate.textContent = "Settled — unanimous";
-      odetail.innerHTML = "All three resolvers read the same value from the named source. " +
-        "<code>buildResolveMarketTx</code> is called and a receipt is published: spec hash, " +
-        "source bytes hash, fetch timestamps, every verdict.";
-      ostate.textContent = yes === 3 ? "Settled — unanimous YES" : "Settled — unanimous NO";
-    } else {
-      outcome.setAttribute("data-state","abstained");
-      ostate.textContent = "Abstained — panel split " + yes + "/3";
-      odetail.innerHTML = "The resolvers disagree, so the question was not as well-posed as it looked. " +
-        "Brier does not settle. It sets <code>isDisputed</code>, publishes every resolver's fetched " +
-        "bytes and verdict, and hands the human oracle a prepared evidence packet. " +
-        "Traders keep their positions until a human decides.";
-    }
-  }
+  var picker = document.getElementById("picker");
+  var out = document.getElementById("out");
+  var verdict = document.getElementById("verdict");
+  var detail = document.getElementById("detail");
 
-  document.getElementById("resolvers").addEventListener("click", function(e){
-    var b = e.target.closest(".flip");
-    if (!b) return;
-    var i = +b.getAttribute("data-i");
-    verdicts[i] = verdicts[i] === "YES" ? "NO" : "YES";
-    render();
+  CASES.forEach(function(c, i){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "q";
+    b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+    b.innerHTML = '<span class="qt">' + c.q + '</span><span class="ql">' + c.liq + '</span>';
+    b.addEventListener("click", function(){ select(i); });
+    picker.appendChild(b);
   });
 
-  render();
+  function select(i){
+    var c = CASES[i];
+    var buttons = picker.querySelectorAll(".q");
+    for (var k = 0; k < buttons.length; k++){
+      buttons[k].setAttribute("aria-selected", k === i ? "true" : "false");
+    }
+    out.setAttribute("data-v", c.v);
+    verdict.textContent = c.label;
+    detail.innerHTML = c.d;
+  }
+
+  select(0);
 })();
 </script>
