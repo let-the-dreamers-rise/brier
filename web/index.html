@@ -380,42 +380,62 @@ footer a:hover{color:var(--accent)}
 
   <section>
     <p class="sec-label">05 &mdash; The measurement</p>
-    <h2>It refuses the market that got attacked.</h2>
-    <p>The grader runs on an adversarial corpus of twenty questions &mdash; historical disputed
-    markets, clean counterparts, and the shape an agent produces from a one-line prompt.
-    <code>npm test</code> covers it with 35 assertions.</p>
+    <h2>$384M of live liquidity sits on markets with no machine-readable source.</h2>
+    <p>This is the part that needs no opinion from us. Polymarket publishes a
+    <code>resolutionSource</code> field on every market. Either it holds a fetchable URL or it does
+    not. Counting that is a fact about their data, so it cannot be circular.</p>
+    <p>Surveyed every open market their public API returns, ranked by liquidity:</p>
 
     <div class="panel scroll-x" style="margin-top:20px">
-      <div class="panel-head"><span>node bin/grade.mjs</span><span>20 cases</span></div>
-      <div class="panel-body"><pre>unsettleable, refused       <span class="s">12/12</span>   (100% caught)
-settleable, admitted        <span class="s">8/8</span>     (100% passed)
-false refusals              <span class="s">0</span>
+      <div class="panel-head"><span>node bin/survey.mjs</span><span>1,192 open markets &middot; $427.0M liquidity</span></div>
+      <div class="panel-body"><pre>no fetchable resolutionSource   <span class="w">907/1192</span>   <span class="w">76.1%</span>
+  as a share of liquidity       <span class="w">$383.9M</span>   <span class="w">89.9%</span>
 
-Historical disputed market:
-  <span class="w">refused</span>  &ldquo;Will Ukraine agree to Trump's mineral deal before April?&rdquo;
-           fired: TEMPORAL_VAGUE, VAGUE_PREDICATE
-           <span class="c">// "agree" is a judgement call no source can settle;</span>
-           <span class="c">// "before April" names a period, not an instant.</span></pre></div>
+settles on human judgement      <span class="w">864/1192</span>   <span class="w">72.5%</span>
+  as a share of liquidity       <span class="w">$295.5M</span>   <span class="w">69.2%</span>
+
+<span class="c">// "settles on human judgement" = the description defers to phrasing</span>
+<span class="c">// like "a consensus of credible reporting" instead of an instrument.</span></pre></div>
     </div>
 
-    <p style="margin-top:22px">That market is not hypothetical. Its odds were driven from 9% to 100%
-    and it settled &ldquo;Yes&rdquo; with no agreement in place, on five million UMA cast across three
-    accounts. Brier never opens it. The defect is in the question, and the question was checkable
-    before a single dollar was staked.</p>
+    <p style="margin-top:22px">Nine of the ten deepest books with no fetchable source are the 2028
+    Democratic nomination ladder &mdash; $2.8M each on Kim Kardashian, MrBeast, Oprah &mdash; every one
+    of them settling on &ldquo;a consensus.&rdquo; The deepest of all, at $3.0M, asks whether the Fed
+    cuts 25bps in September, and names no source at all.</p>
 
-    <div class="panel" style="margin-top:20px;border-color:var(--abstain)">
-      <div class="panel-head" style="color:var(--abstain)"><span>What this number is not</span><span>read before quoting it</span></div>
+    <p>The grader also finds the attack pattern alive and unpatched. It refuses
+    <span style="color:var(--abstain)">&ldquo;Iran agrees to end enrichment of uranium by December 31?&rdquo;</span>
+    on the same unresolvable predicate &mdash; <b>agrees</b> &mdash; that it fires on the Ukraine
+    minerals market whose odds were driven 9% to 100% and settled Yes with no agreement in place.
+    Same defect, different war, still open, still taking money.</p>
+
+    <div class="panel" style="margin-top:24px;border-color:var(--abstain)">
+      <div class="panel-head" style="color:var(--abstain)"><span>Where the grader is weaker than the headline</span><span>read this before quoting it</span></div>
       <div class="panel-body">
-        <p style="margin:0;color:var(--dim);font-size:14.5px">100% is circular and should be read as
-        such: the same author wrote the corpus labels and the detection probes. It demonstrates that
-        the mechanism runs and that the historical failure is inside its reach. It is
-        <b>not</b> evidence of accuracy on questions nobody has seen. The probes are lexical, not
-        semantic &mdash; they catch the constructs that have empirically produced disputes, and they
-        will miss a question that is ambiguous for a reason no probe knows about. The honest version
-        of this claim needs a corpus somebody else labels, and that is the next measurement, not a
-        finished one.</p>
+        <p style="margin:0 0 12px;color:var(--dim);font-size:14.5px">The survey above needs no
+        labelling. The grader's own accuracy is a separate and more modest claim, and these are its
+        real numbers over the same 1,192 markets:</p>
+        <pre style="font-size:12.5px">refused unrewritably     <span class="w">9/1192</span>   0.8%   <span class="c">// no spec field can save these</span>
+SUPERLATIVE_UNTIED     <span class="w">102</span>      8.6%
+TEMPORAL_VAGUE          <span class="w">83</span>      7.0%
+VAGUE_PREDICATE          <span class="w">9</span>      0.8%</pre>
+        <p style="margin:12px 0 0;color:var(--dim);font-size:14.5px">Three honest caveats. The grader
+        refuses <i>all</i> 1,192 on structural grounds, but that is an artifact and not a finding &mdash;
+        Polymarket has no selector or void-branch fields to populate, so the check is trivially true
+        and we do not count it. <b>TEMPORAL_VAGUE over-fires</b>: it flags &ldquo;before 2027&rdquo;,
+        which is precise apart from the timezone, so treat that 7.0% as an upper bound on a minor
+        defect. And the probes are lexical, not semantic &mdash; they catch constructs that have
+        empirically produced disputes and will miss a question ambiguous for a reason no probe knows
+        about.</p>
+        <p style="margin:12px 0 0;color:var(--dim);font-size:14.5px">The strongest grader result is
+        the narrow one: the <code>VAGUE_PREDICATE</code> cluster is real, it is the same defect that
+        was exploited for money, and it is still live on Polymarket today.</p>
       </div>
     </div>
+
+    <p style="margin-top:24px" class="dimtext">A separate 20-question adversarial corpus, covered by
+    35 tests, sits in the repo. It passes 20/20, and that number is circular &mdash; one author wrote
+    both the labels and the probes &mdash; so it is a regression test, not evidence.</p>
   </section>
 
   <section>

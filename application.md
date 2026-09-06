@@ -129,22 +129,52 @@ This is not a proposal for software that does not exist. Implemented and tested:
 
   35 tests passing (node --test). Corpus of 20 adversarial questions.
 
-MEASURED, WITH ITS LIMITATION STATED
+MEASURED ON REAL MARKETS NOBODY HERE WROTE
 
-  unsettleable, refused    12/12
-  settleable, admitted      8/8
-  false refusals            0
+Surveyed every open market Polymarket's public API returns, ranked by liquidity:
+1,192 markets, $427.0M of liquidity. This needs no labelling from me --
+Polymarket publishes a resolutionSource field, and it either holds a fetchable
+URL or it does not:
 
-The grader refuses "Will Ukraine agree to Trump's mineral deal before April?" --
-the market whose odds were driven 9% to 100% and settled Yes with no agreement in
-place. It fires VAGUE_PREDICATE on "agree" and TEMPORAL_VAGUE on "before April".
-The defect was in the question and was checkable before a dollar was staked.
+  no fetchable resolutionSource    907/1192   76.1%
+    as a share of liquidity        $383.9M    89.9%
+  settles on human judgement       864/1192   72.5%
+    as a share of liquidity        $295.5M    69.2%
 
-That 100% is circular and I will not present it otherwise: the same author wrote
-the corpus labels and the probes. It shows the mechanism runs and that the
-historical failure is inside its reach. It is not evidence of accuracy on unseen
-questions. The probes are lexical, not semantic. The next measurement is a corpus
-somebody else labels.
+Nine of the ten deepest books with no source are the 2028 Democratic nomination
+ladder -- $2.8M each on Kim Kardashian, MrBeast, Oprah -- every one settling on
+"a consensus." The deepest, $3.0M on a September Fed cut, names no source at all.
+
+The attack pattern is still live. The grader refuses "Iran agrees to end
+enrichment of uranium by December 31?" on the same unresolvable predicate --
+"agrees" -- that it fires on the Ukraine minerals market whose odds were driven
+9% to 100% and settled Yes with no agreement in place. Same defect, still open,
+still taking money.
+
+WHERE THIS IS WEAKER THAN THE HEADLINE
+
+The survey needs no labelling. The grader's own accuracy is a separate, more
+modest claim over those same 1,192 markets:
+
+  refused unrewritably    9/1192   0.8%
+  SUPERLATIVE_UNTIED        102    8.6%
+  TEMPORAL_VAGUE             83    7.0%
+  VAGUE_PREDICATE             9    0.8%
+
+Three caveats I state before anyone asks. The grader refuses all 1,192 on
+structural grounds, but that is an artifact, not a finding -- Polymarket has no
+selector or void-branch fields to populate, so the check is trivially true and I
+do not count it. TEMPORAL_VAGUE over-fires: it flags "before 2027", which is
+precise apart from timezone, so read 7.0% as an upper bound on a minor defect.
+And the probes are lexical, not semantic -- they will miss a question that is
+ambiguous for a reason no probe knows about.
+
+The strong grader result is the narrow one: the VAGUE_PREDICATE cluster is real,
+it is the defect that was exploited for money, and it is live on Polymarket now.
+
+The repo also carries a 20-question adversarial corpus that passes 20/20. That
+number is circular -- one author wrote both labels and probes -- so it is a
+regression test, not evidence.
 
 NEXT (2 weeks)
 
@@ -176,11 +206,12 @@ It trades on Rain rails, so it generates volume and earns the 0.5% — and its
 receipts make honest volume legible, which protects the rebate from wash trading.
 
 The spec schema, admission grader and unanimity gate are implemented and tested
-(35 tests). On a 20-question adversarial corpus the grader refuses all 12
-unsettleable questions with zero false refusals — including the exact Polymarket
-question whose odds were driven 9% to 100% and settled Yes with no agreement in
-place. That number is circular (one author wrote both corpus and probes) and the
-next step is a corpus labelled by someone else.
+(35 tests). Surveying 1,192 live Polymarket markets holding $427M: 76% carry no
+fetchable resolution source, and that is 90% of the liquidity. 72% defer to
+phrasing like "a consensus of credible reporting" instead of an instrument. The
+grader still refuses "Iran agrees to end enrichment of uranium by December 31?"
+on the same unresolvable predicate as the Ukraine market that was driven 9% to
+100% and settled Yes with no agreement in place.
 ```
 
 ---
@@ -234,13 +265,18 @@ https://claude.ai/code/artifact/10fb7116-4199-4391-9454-3463d4f52bd4
 | UMA attack: 9%→100%, 5M UMA across 3 accounts, 25% of votes | Orochi Network |
 | WSJ: >50% of votes from ten wallets in most disputed markets; July 2026 lawsuit | Laika Labs / crypto.news summaries |
 | Bots are 14 of top 20 Polymarket wallets, >30% of activity, 37% profitable vs 7–13% of humans | CoinDesk, 15 Mar 2026 |
+| 1,192 live markets, $427.0M liquidity; 76.1% no fetchable source (89.9% of liquidity); 72.5% judgement-settled | `bin/survey.mjs` over gamma-api.polymarket.com, cached in `corpus/polymarket-live.json` |
 
 ## Deliberately not claimed
 
 - No claim that Brier has users, volume, or a deployed contract. It does not yet.
-- No claim that the 100% corpus result generalises. One author wrote the labels
-  and the probes; it is a demonstration that the mechanism runs, not an accuracy
-  measurement. Say this out loud before anyone asks.
+- No claim that the 20/20 corpus result generalises. One author wrote the labels
+  and the probes; it is a regression test, not an accuracy measurement.
+- No claim from the "grader refused 1192/1192" figure. That is structural and
+  trivially true, because Polymarket has no selector or void-branch fields. Only
+  the 0.8% unrewritable figure is a real grader result.
+- TEMPORAL_VAGUE over-fires on "before 2027" (precise apart from timezone).
+  Stated as an upper bound, not hidden.
 - The settlement panel on the site is an **example panel**, labelled as such. The
   rule it runs is the real one from `src/settle.mjs` and the byte hashes are real
   sha256 of the values shown, but no live fetch happens yet.
