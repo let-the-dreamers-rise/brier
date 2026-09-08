@@ -1,0 +1,381 @@
+{
+ "protocol_version": "1.0.0",
+ "provenance": {
+  "seed": "rain-admission-2026-09-09",
+  "design": "balanced-on-semantic-probe",
+  "min_liquidity": 1000,
+  "per_stratum": 30,
+  "pool_size": 1187,
+  "stratum_sizes": {
+   "no_probe": 989,
+   "probe_fires": 198
+  },
+  "drawn": {
+   "no_probe": 30,
+   "probe_fires": 30
+  }
+ },
+ "predictions": [
+  {
+   "id": "701503",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "1365858",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "616910",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "1357386",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "676743",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "4052420",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3128888",
+   "predicts": "DIFFER",
+   "fired": [
+    "VAGUE_PREDICATE"
+   ]
+  },
+  {
+   "id": "637015",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "601820",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "628957",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "637021",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "3212182",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "3338062",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "562007",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "2046126",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "678417",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "4256285",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "703258",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "908713",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "561258",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "561280",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3825550",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3856099",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "1357397",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "567621",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "1361056",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3008504",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "562000",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "997488",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "1302038",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "562832",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "4265842",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3338014",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3008497",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "2243297",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3825546",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3013350",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "1469738",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "4016641",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "559682",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "2965155",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "637020",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "4234544",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3840654",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "628940",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "1129900",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "1130015",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "3702025",
+   "predicts": "DIFFER",
+   "fired": [
+    "VAGUE_PREDICATE"
+   ]
+  },
+  {
+   "id": "2772181",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "3337758",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "1130013",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "1731346",
+   "predicts": "DIFFER",
+   "fired": [
+    "VAGUE_PREDICATE"
+   ]
+  },
+  {
+   "id": "630805",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "628944",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "559690",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "1365854",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  },
+  {
+   "id": "637013",
+   "predicts": "DIFFER",
+   "fired": [
+    "TEMPORAL_VAGUE"
+   ]
+  },
+  {
+   "id": "559658",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "2520307",
+   "predicts": "SAME",
+   "fired": []
+  },
+  {
+   "id": "678419",
+   "predicts": "DIFFER",
+   "fired": [
+    "SUPERLATIVE_UNTIED"
+   ]
+  }
+ ],
+ "hash": "02a68ba3fccab3b6dc8dea4bb008ed5400339a6038699907ff06bb41714c4e38"
+}

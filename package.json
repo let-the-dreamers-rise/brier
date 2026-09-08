@@ -6,7 +6,8 @@
   "description": "Resolution contracts for agent-created prediction markets on Rain.",
   "scripts": {
     "test": "node --test \"test/*.test.mjs\"",
-    "grade": "node bin/grade.mjs"
+    "grade": "node bin/grade.mjs",
+    "label": "node bin/label.mjs"
   },
   "engines": { "node": ">=20" }
 }
