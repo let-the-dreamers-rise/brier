@@ -96,7 +96,7 @@ behind a bot challenge I will not work around. Closing that gap is milestone
 one, and it is the first thing the money buys.
 ```
 
-### Short version — 899 characters, verified
+### Short version — 898 characters, verified
 
 ```
 Brier decides whether a market can be settled before it opens, and leaves a
@@ -105,8 +105,8 @@ receipt.
 I tested question wording against Polymarket's UMA dispute record: 3,464
 settled markets, $26B volume, realised outcomes, nothing labelled by me. Above
 $6.8M volume, flagged questions were disputed 16.2% vs 8.1% (2.00x, z=3.33).
-Pooled across all sizes it is 1.29x and not significant -- I report the null
-because it is mine, and I deleted two checks that predicted nothing.
+Pooled across all sizes it is 1.29x, not significant -- I report the null
+because it is mine, and deleted two checks that predicted nothing.
 
 That effect is measured above $6.8M. Rain's biggest market was $1.3M, so I do
 not claim it prevents disputes on Rain today.
