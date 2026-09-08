@@ -38,11 +38,16 @@ markets, $26B of volume, realised outcomes, nothing labelled by me.
   non-sports pooled               4.6% vs 4.7%                         0.98x
 
 The last two rows are null results and I am reporting them because they are
-mine. Two of my six checks fired 155 and 169 times and predicted nothing; I
-deleted them. An earlier cut of this over 500 markets read 2.03x and looked
-like a finding -- that sample was volume-ordered, and the effect did not
-survive a proper draw. The analysis reproduces from a committed corpus in the
-repo.
+mine. An earlier cut over 500 markets read 2.03x and looked like a finding --
+that sample was volume-ordered, and the effect did not survive a proper draw.
+The analysis reproduces from a committed corpus in the repo.
+
+Two of my six checks fired 155 and 169 times and predicted nothing. They are
+still in the code today. Cutting them is deliberately not a quiet edit: the
+repo holds a pre-registered sample with the current checks hashed into it, and
+the scorer refuses to report any number once a check has moved. So removing
+them costs me a fresh draw and a fresh commitment, which is the point of
+building it that way.
 
 WHERE THIS DOES NOT APPLY TO RAIN -- SAID FIRST, NOT IN A FOOTNOTE
 
@@ -96,7 +101,7 @@ behind a bot challenge I will not work around. Closing that gap is milestone
 one, and it is the first thing the money buys.
 ```
 
-### Short version — 898 characters, verified
+### Short version — 895 characters, verified
 
 ```
 Brier decides whether a market can be settled before it opens, and leaves a
@@ -106,7 +111,7 @@ I tested question wording against Polymarket's UMA dispute record: 3,464
 settled markets, $26B volume, realised outcomes, nothing labelled by me. Above
 $6.8M volume, flagged questions were disputed 16.2% vs 8.1% (2.00x, z=3.33).
 Pooled across all sizes it is 1.29x, not significant -- I report the null
-because it is mine, and deleted two checks that predicted nothing.
+because it is mine, and two of my six checks predicted nothing.
 
 That effect is measured above $6.8M. Rain's biggest market was $1.3M, so I do
 not claim it prevents disputes on Rain today.
