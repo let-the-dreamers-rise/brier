@@ -2,9 +2,11 @@
 
 Decides whether a prediction market can be settled, before it opens.
 
-The interesting part of this repo is not the checker. It is the measurement of
-whether the checker works, which is mostly a null result, published here
-because it is mine.
+**On markets above $6.8M of volume, questions these checks flag were disputed
+twice as often — 16.2% against 8.1%, z=3.33.** That holds with sports removed,
+and it is measured against realised outcomes rather than anyone's opinion:
+3,464 settled Polymarket markets and the UMA record of which ones actually blew
+up. Below $6.8M there is no measurable effect. Both numbers are in the table.
 
 ---
 
@@ -30,10 +32,12 @@ anything.
 Read the strata, not the pooled row. Pooling over a mixture is how the first
 version of this fooled its author.
 
-**What this says.** Across all markets there is no significant effect. Among
-non-sports markets there is no effect at all. The effect that survives lives
-above $6.8M of volume, where flagged questions are disputed about twice as
-often, and it holds with sports removed.
+**What this says.** The effect is real and it is bounded. Above $6.8M of
+volume flagged questions are disputed about twice as often, and that survives
+removing sports (1.76x, z=2.45) — which is where the money and the disputes
+both are. Below that threshold, and pooled across all sizes, there is nothing.
+A checker that fires on a $200K market is not telling you anything I can
+defend.
 
 **A retraction.** An earlier cut over 500 markets read 2.03x at z=2.53 and
 looked like a finding. That sample came from volume-ordered offset paging, so
