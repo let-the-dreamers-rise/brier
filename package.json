@@ -9,5 +9,10 @@
     "grade": "node bin/grade.mjs",
     "label": "node bin/label.mjs"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@buidlrrr/rain-sdk": "^2.0.0"
+  }
 }

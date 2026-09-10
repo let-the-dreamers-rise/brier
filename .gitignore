@@ -2,3 +2,5 @@ corpus/raw/
 node_modules/
 corpus/closed/
 application.md
+corpus/rain-markets.json
+mm/out/
