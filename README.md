@@ -1,16 +1,57 @@
 # Brier
 
-Decides whether a prediction market can be settled, before it opens.
+A market maker for the long tail of prediction markets, with a quoting risk
+policy measured against 3,464 settled markets instead of guessed.
 
 **On markets above $6.8M of volume, questions these checks flag were disputed
 twice as often — 16.2% against 8.1%, z=3.33.** That holds with sports removed,
-and it is measured against realised outcomes rather than anyone's opinion:
-3,464 settled Polymarket markets and the UMA record of which ones actually blew
-up. Below $6.8M there is no measurable effect. Both numbers are in the table.
+and it is measured against realised outcomes rather than anyone's opinion.
+Below $6.8M there is no measurable effect. Both numbers are in the table below,
+and the quoter uses only the checks that earned their place.
 
 ---
 
-## Does question wording predict that a market gets disputed?
+## The quoter
+
+```bash
+node bin/quote.mjs                  # the book it would post on Rain right now
+node bin/quote.mjs --budget 50000   # the same book at a larger inventory
+```
+
+Reads Rain's live production markets through the Rain SDK and prints the quote
+book it would post: which markets, which outcomes, bid, ask and size. It signs
+nothing and sends nothing. Turning a line into an order is
+`buildLimitBuyOptionTx`, which needs inventory and a key this code does not
+hold.
+
+On its latest run it quoted 19 of 30 live markets across 52 outcome legs. It
+took three versions against live data to get there, each fixing what the last
+one got wrong:
+
+- **v1 quoted nothing.** It handled binary markets only, and most live markets
+  had three to eight outcomes. Every outcome is now its own leg.
+- **v2 would have given money away.** It quoted "by March 31, 2026" at 23.8% in
+  September 2026. Outcome legs dated in the past are now dropped. Dates are read
+  only when a month and a year are both named, because `Date.parse("100")` — a
+  real Metascore bucket — is the year 100.
+- **v3 states its limit.** Most quoted markets have a single participant, so
+  the listed price is the creator's opening guess. Those are quoted wider. On
+  most of the book there is no fair value independent of that guess yet.
+
+The risk policy, in `mm/policy.mjs`, is the dispute table turned into rules,
+each citing the lift it came from:
+
+| check | dispute lift | what the quoter does |
+|---|---|---|
+| VAGUE_PREDICATE | 2.92x | does not quote |
+| TEMPORAL_VAGUE | 1.55x | quotes wider |
+| SUPERLATIVE_UNTIED | 1.10x | nothing — measured noise |
+| MISSING_UNIT | 0.00x | nothing — fired 155 times, zero disputes |
+| COMPOUND_CONDITION, UNBOUND_ENTITY | too few to measure | quotes wider |
+
+---
+
+## Where the risk policy comes from: does question wording predict disputes?
 
 Polymarket's UMA record logs every proposal and dispute a market went through.
 That is a realised outcome written by the protocol, on markets nobody here
@@ -105,7 +146,9 @@ node bin/survey.mjs --samples
 | `src/spec.mjs` | the resolution contract: canonical serialisation, sha256, binding into a market description |
 | `src/grader.mjs` | the admission checks |
 | `src/settle.mjs` | unanimity gate — any disagreement abstains; a resolver that could not read its source is a hold, never a vote |
-| `edge/disputes.mjs` | the analysis above |
+| `edge/disputes.mjs` | the dispute analysis |
+| `mm/policy.mjs` | the quoting risk policy, each rule citing its measured lift |
+| `mm/quoter.mjs` | read-only quote book from a live market listing |
 | `label/` | a blind instrument for collecting labels the author cannot influence, with a pre-registered commitment |
 | `corpus/` | the committed data, so the numbers reproduce |
 
@@ -113,7 +156,9 @@ node bin/survey.mjs --samples
 
 ## What is not claimed
 
-- **No users, no volume, no deployed contract.** None of this is in production.
+- **No orders placed, no users, no volume.** The quoter is read-only.
+- **No fair value yet on most of the book.** Where a market has one
+  participant, the quote is centred on the creator's guess.
 - **The strongest result may not transfer.** It is measured above $6.8M of
   volume. Zero of the 1,156 markets in that stratum are as small as a typical
   long-tail market.
